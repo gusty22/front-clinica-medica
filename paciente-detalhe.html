@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClinicaPi - Detalhe do Paciente (Bootstrap 5)</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bs-primary: #00A896; --bs-primary-rgb: 0, 168, 150; --bs-primary-dark-rgb: 0, 138, 121; --bs-primary-bg-subtle: rgba(var(--bs-primary-rgb), 0.1);
+            --bs-secondary: #5E60CE; --bs-secondary-rgb: 94, 96, 206; --bs-secondary-bg-subtle: rgba(var(--bs-secondary-rgb), 0.1);
+            --bs-warning: #FF9E00; /* accent */ --bs-warning-rgb: 255, 158, 0; --bs-warning-bg-subtle: rgba(var(--bs-warning-rgb), 0.1); --bs-warning-text-emphasis: #cc7e00;
+            --bs-danger: #f43f5e; /* rose-500 */ --bs-danger-rgb: 244, 63, 94; --bs-danger-bg-subtle: rgba(var(--bs-danger-rgb), 0.1); --bs-danger-text-emphasis: #f43f5e;
+            --bs-dark: #1E293B; --bs-light: #F8FAFC; --bs-body-bg: var(--bs-light); --bs-border-color: #e2e8f0; --bs-border-color-translucent: rgba(var(--bs-dark-rgb), 0.1);
+            --bs-secondary-color: #64748B; --bs-body-font-family: 'Inter', sans-serif; --bs-border-radius-xl: 0.75rem; --bs-border-radius-lg: 0.5rem;
+            --bs-gray-100: #f1f5f9; --bs-gray-200: #e5e7eb; --bs-gray-300: #d1d5db; --bs-gray-400: #9ca3af; --bs-gray-500: #6b7280; --bs-gray-600: #4b5563; --bs-gray-700: #374151; --bs-gray-800: #1f2937;
+        }
+        body { display: flex; height: 100vh; overflow: hidden; font-size: 0.875rem; }
+        .sidebar { width: 260px; min-width: 260px; background-color: var(--bs-white); border-right: 1px solid var(--bs-border-color); transition: width 0.3s ease; }
+        .logo-icon { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-secondary) 100%); }
+        .sidebar .nav-link { color: var(--bs-secondary-color); font-weight: 500; padding: 0.75rem; border-radius: var(--bs-border-radius-lg); }
+        .sidebar .nav-link .feather { width: 20px; height: 20px; color: #94a3b8; }
+        .sidebar .nav-link:hover { background: var(--bs-gray-100); color: var(--bs-dark); }
+        .sidebar .nav-link.active { background: var(--bs-light); color: var(--bs-primary); font-weight: 600; }
+        .sidebar .nav-link.active .feather { color: var(--bs-primary); }
+        .nav-group-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; padding: 0 0.75rem; margin-bottom: 0.5rem; }
+        .user-profile .feather { color: #94a3b8; }
+        .header { height: 64px; background: white; border-bottom: 1px solid var(--bs-border-color); }
+        .search-input { padding-left: 2.5rem; font-size: 0.875rem; border-color: var(--bs-border-color); background-color: var(--bs-light); }
+        .search-input:focus { outline: none; border-color: var(--bs-primary); background: white; box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), 0.1); }
+        .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none; }
+        .action-button { width: 36px; height: 36px; border-radius: 50%; color: #64748b; background: transparent; transition: all 0.2s ease; position: relative; border: none; padding: 0; }
+        .action-button:hover { background: var(--bs-gray-100); color: var(--bs-dark); }
+        .notification-badge { position: absolute; top: 0; right: 0; width: 16px; height: 16px; font-size: 0.625rem; font-weight: 600; background: var(--bs-danger); }
+        .main-content-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        main { flex: 1; overflow-y: auto; background-color: var(--bs-light); }
+        .btn-primary:hover { background-color: rgba(var(--bs-primary-dark-rgb), 1); border-color: rgba(var(--bs-primary-dark-rgb), 1); }
+        .text-primary { color: var(--bs-primary) !important; }
+        .text-secondary { color: var(--bs-secondary) !important; }
+        .text-warning { color: var(--bs-warning-text-emphasis) !important; }
+        .text-danger { color: var(--bs-danger-text-emphasis) !important; }
+        .text-rose-500 { color: var(--bs-danger-text-emphasis) !important; }
+        .hover\:text-rose-500\/80:hover { color: rgba(var(--bs-danger-rgb), 0.8) !important; }
+
+        /* Estilo das Abas (Tabs) */
+        .nav-tabs .nav-link {
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--bs-gray-600);
+            font-weight: 600;
+            padding: 0.5rem 0.25rem; /* Ajuste para espaçamento similar */
+            margin-right: 1.5rem; /* gap-6 */
+            transition: all 0.2s;
+        }
+        .nav-tabs .nav-link:hover {
+            border-bottom-color: var(--bs-gray-300);
+            color: var(--bs-dark);
+        }
+        .nav-tabs .nav-link.active {
+            color: var(--bs-primary);
+            background-color: transparent;
+            border-bottom-color: var(--bs-primary);
+        }
+        .nav-tabs {
+            border-bottom-color: var(--bs-border-color); /* Linha divisória */
+        }
+         /* Upload Area */
+        .upload-area {
+            border: 2px dashed var(--bs-gray-300);
+            transition: all 0.2s ease;
+        }
+        .upload-area:hover {
+            border-color: var(--bs-primary);
+            background-color: var(--bs-primary-bg-subtle);
+        }
+        
+        /* ### ADIÇÃO DE CSS AQUI ### */
+        .feather-sm {
+            width: 1rem;
+            height: 1rem;
+        }
+        /* ### FIM DA ADIÇÃO ### */
+
+        @media (max-width: 768px) {
+           .sidebar { width: 72px; }
+           .sidebar .logo-text, .sidebar .nav-group-title, .sidebar .nav-link span, .sidebar .user-info, .sidebar .user-settings .feather { display: none; }
+           .sidebar .logo { justify-content: center; padding-bottom: 1.5rem; padding-left: 0; padding-right: 0; }
+           .sidebar .nav-link { justify-content: center; }
+           .sidebar .user-profile { justify-content: center; padding-left: 0; padding-right: 0; }
+           .header .search-bar-wrapper { display: none; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar d-flex flex-column vh-100">
+        <div class="d-flex flex-column flex-grow-1 p-3">
+            <div class="logo d-flex align-items-center gap-2 pb-3 mb-3 border-bottom">
+                <div class="logo-icon d-flex align-items-center justify-content-center text-white">
+                    <i data-feather="activity" style="width: 18px; height: 18px;"></i>
+                </div>
+                <span class="logo-text fs-5 fw-bold text-dark">ClinicaPi</span>
+            </div>
+            <nav class="nav nav-pills flex-column flex-grow-1">
+                <div class="nav-group mb-3">
+                    <div class="nav-group-title">Geral</div>
+                    <a class="nav-link d-flex align-items-center gap-2" href="dashboard.html">
+                        <i data-feather="home" class="nav-icon"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2" href="agenda.html">
+                        <i data-feather="calendar" class="nav-icon"></i>
+                        <span>Agenda</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2 active" href="pacientes.html"> <i data-feather="users" class="nav-icon"></i>
+                        <span>Pacientes</span>
+                    </a>
+                </div>
+                <div class="nav-group mb-3">
+                    <div class="nav-group-title">Financeiro</div>
+                    <a class="nav-link d-flex align-items-center gap-2" href="financeiro.html">
+                        <i data-feather="dollar-sign" class="nav-icon"></i>
+                        <span>Financeiro</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2" href="notas-fiscais.html">
+                        <i data-feather="file-text" class="nav-icon"></i>
+                        <span>Notas Fiscais</span>
+                    </a>
+                </div>
+                <div class="nav-group mb-3">
+                    <div class="nav-group-title">Administrativo</div>
+                    <a class="nav-link d-flex align-items-center gap-2" href="prontuarios.html">
+                        <i data-feather="clipboard" class="nav-icon"></i>
+                        <span>Prontuários</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2" href="relatorios.html">
+                        <i data-feather="pie-chart" class="nav-icon"></i>
+                        <span>Relatórios</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2" href="configuracoes.html">
+                        <i data-feather="settings" class="nav-icon"></i>
+                        <span>Configurações</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+        
+        <div class="user-profile p-3 border-top dropup">
+            <a href="#" class="d-flex align-items-center gap-2 text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;">
+                <div class="user-avatar rounded-circle bg-primary-subtle d-flex align-items-center justify-content-center text-primary" style="width: 36px; height: 36px;">
+                    <i data-feather="user"></i>
+                </div>
+                <div class="user-info flex-grow-1 lh-sm">
+                    <div class="user-name fw-medium small text-dark">Dr. Silva</div>
+                    <div class="user-role small text-muted">Médico</div>
+                </div>
+                <div class="user-settings">
+                    <i data-feather="chevron-down"></i>
+                </div>
+            </a>
+            <ul class="dropdown-menu shadow-sm" style="font-size: 0.875rem; width: calc(100% - 1.5rem); margin-left: 0.75rem;">
+                <li><a class="dropdown-item d-flex align-items-center gap-2" href="#"><i data-feather="user" class="feather-sm"></i> Meu Perfil</a></li>
+                <li><a class="dropdown-item d-flex align-items-center gap-2" href="configuracoes.html"><i data-feather="settings" class="feather-sm"></i> Configurações</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item d-flex align-items-center gap-2 text-danger" href="login.html"><i data-feather="log-out" class="feather-sm"></i> Sair</a></li>
+            </ul>
+        </div>
+        </aside>
+
+    <div class="main-content-wrapper">
+
+        <header class="header d-flex align-items-center px-4">
+            <div class="search-bar-wrapper flex-grow-1 mx-md-4" style="max-width: 500px;">
+                <div class="input-group input-group-sm position-relative">
+                    <span class="search-icon"><i data-feather="search"></i></span>
+                    <input type="text" class="form-control search-input" placeholder="Pesquisar...">
+                </div>
+            </div>
+            <div class="header-actions ms-auto d-flex align-items-center gap-2">
+                <button class="action-button">
+                    <i data-feather="bell"></i>
+                    <span class="notification-badge badge rounded-pill">3</span>
+                </button>
+                <button class="action-button">
+                    <i data-feather="message-square"></i>
+                    <span class="notification-badge badge rounded-pill">1</span>
+                </button>
+                
+                <div class="user-menu dropdown">
+                    <a href="#" class="d-flex align-items-center gap-2 text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
+                        <div class="user-avatar rounded-circle bg-primary-subtle d-flex align-items-center justify-content-center text-primary" style="width: 36px; height: 36px;">
+                            <i data-feather="user"></i>
+                        </div>
+                        <i data-feather="chevron-down" class="text-secondary"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="font-size: 0.875rem;">
+                        <li><a class="dropdown-item d-flex align-items-center gap-2" href="#"><i data-feather="user" class="feather-sm"></i> Meu Perfil</a></li>
+                        <li><a class="dropdown-item d-flex align-items-center gap-2" href="configuracoes.html"><i data-feather="settings" class="feather-sm"></i> Configurações</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item d-flex align-items-center gap-2 text-danger" href="login.html"><i data-feather="log-out" class="feather-sm"></i> Sair</a></li>
+                    </ul>
+                </div>
+                </div>
+        </header>
+
+        <main class="p-4">
+            <div class="card shadow-sm border-0 rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex flex-column flex-md-row align-items-md-start justify-content-md-between">
+                        <div class="d-flex align-items-center gap-3 mb-3 mb-md-0">
+                            <img class="rounded-circle" src="https://ui-avatars.com/api/?name=Carlos+Ferreira&background=random&size=80" alt="Carlos" width="80" height="80">
+                            <div class="lh-sm">
+                                <h1 class="h3 fw-bold text-dark mb-1">Carlos Ferreira</h1>
+                                <p class="small text-secondary mb-1">CPF: 123.456.789-00 • 32 anos (05/10/1993)</p>
+                                <p class="small text-secondary mb-0">carlos.f@email.com • (34) 99999-9999</p>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2 flex-shrink-0">
+                            <button class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1">
+                                <i data-feather="edit" class="feather-sm"></i> Editar Cadastro
+                            </button>
+                            <button class="btn btn-sm btn-primary d-inline-flex align-items-center gap-1">
+                                <i data-feather="plus" class="feather-sm"></i> Nova Consulta
+                            </button>
+                        </div>
+                    </div>
+                    <div class="border-top mt-3 pt-3">
+                        <h4 class="small fw-semibold text-dark mb-1">Informações Adicionais</h4>
+                        <p class="small text-secondary mb-1"><strong class="fw-medium text-dark">Alergias:</strong> Nenhuma registrada.</p>
+                        <p class="small text-secondary mb-0"><strong class="fw-medium text-dark">Endereço:</strong> Rua das Flores, 123, Bairro Centro, Uberlândia - MG</p>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="nav nav-tabs mb-4" id="patientTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="prontuarios-tab" data-bs-toggle="tab" data-bs-target="#prontuarios-tab-pane" type="button" role="tab" aria-controls="prontuarios-tab-pane" aria-selected="true">Prontuários</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="financeiro-tab" data-bs-toggle="tab" data-bs-target="#financeiro-tab-pane" type="button" role="tab" aria-controls="financeiro-tab-pane" aria-selected="false">Financeiro</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="documentos-tab" data-bs-toggle="tab" data-bs-target="#documentos-tab-pane" type="button" role="tab" aria-controls="documentos-tab-pane" aria-selected="false">Documentos</button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="patientTabContent">
+
+                <div class="tab-pane fade show active" id="prontuarios-tab-pane" role="tabpanel" aria-labelledby="prontuarios-tab" tabindex="0">
+                    <div class="text-end mb-3">
+                        <button class="btn btn-secondary btn-sm d-inline-flex align-items-center gap-1">
+                            <i data-feather="plus" class="feather-sm"></i> Novo Registro no Prontuário
+                        </button>
+                    </div>
+                    <div class="d-flex flex-column gap-3">
+                        <div class="card shadow-sm border-0 rounded-4">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h3 class="h5 fw-bold text-dark mb-0">Consulta de Retorno</h3>
+                                    <span class="small text-secondary fw-medium">02/05/2025 • Dr. Silva</span>
+                                </div>
+                                <div class="d-flex flex-column gap-2 small text-secondary">
+                                    <div>
+                                        <h4 class="fw-semibold text-dark small mb-0">Anamnese</h4>
+                                        <p class="mb-0">Paciente relata melhora significativa dos sintomas. Pressão arterial controlada (120/80 mmHg). Sem queixas adicionais.</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="fw-semibold text-dark small mb-0">Prescrição</h4>
+                                        <p class="mb-0">Manter medicação atual (Losartana 50mg, 1x ao dia). Recomendar retorno em 6 meses.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card shadow-sm border-0 rounded-4">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h3 class="h5 fw-bold text-dark mb-0">Primeira Consulta</h3>
+                                    <span class="small text-secondary fw-medium">15/04/2025 • Dr. Silva</span>
+                                </div>
+                                <div class="d-flex flex-column gap-2 small text-secondary">
+                                    <div>
+                                        <h4 class="fw-semibold text-dark small mb-0">Anamnese</h4>
+                                        <p class="mb-0">Paciente queixa-se de dores de cabeça frequentes e tontura. Histórico familiar de hipertensão. Pressão arterial aferida: 140/90 mmHg.</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="fw-semibold text-dark small mb-0">Exames Solicitados</h4>
+                                        <p class="mb-0">Hemograma completo, Colesterol total e frações, Glicemia de jejum, MAPA 24h.</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="fw-semibold text-dark small mb-0">Prescrição</h4>
+                                        <p class="mb-0">Losartana 50mg, 1x ao dia. Iniciar imediatamente.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="financeiro-tab-pane" role="tabpanel" aria-labelledby="financeiro-tab" tabindex="0">
+                    <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr class="text-start text-secondary small">
+                                        <th class="px-4 py-3 fw-medium">Data</th>
+                                        <th class="px-4 py-3 fw-medium">Descrição</th>
+                                        <th class="px-4 py-3 fw-medium">Valor</th>
+                                        <th class="px-4 py-3 fw-medium">Status</th>
+                                        <th class="px-4 py-3 fw-medium text-end">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="px-4 py-3 small text-secondary">02/05/2025</td>
+                                        <td class="px-4 py-3 fw-medium text-dark small">Consulta de Retorno</td>
+                                        <td class="px-4 py-3 small text-secondary">R$ 200,00</td>
+                                        <td class="px-4 py-3">
+                                            <span class="badge rounded-pill fw-medium text-primary bg-primary-subtle border border-primary-subtle">Pago</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-end">
+                                            <button class="btn btn-sm btn-link text-primary p-0 text-decoration-none">Gerar Recibo</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 small text-secondary">15/04/2025</td>
+                                        <td class="px-4 py-3 fw-medium text-dark small">Primeira Consulta</td>
+                                        <td class="px-4 py-3 small text-secondary">R$ 350,00</td>
+                                        <td class="px-4 py-3">
+                                            <span class="badge rounded-pill fw-medium text-primary bg-primary-subtle border border-primary-subtle">Pago</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-end">
+                                            <button class="btn btn-sm btn-link text-primary p-0 text-decoration-none">Gerar Recibo</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="documentos-tab-pane" role="tabpanel" aria-labelledby="documentos-tab" tabindex="0">
+                    <div class="card shadow-sm border-0 rounded-4">
+                        <div class="card-body p-4">
+                            <h3 class="h5 fw-bold text-dark mb-3">Upload de Documentos</h3>
+                            <label for="fileUpload" class="upload-area d-block rounded-3 p-5 text-center cursor-pointer mb-4">
+                                <i data-feather="upload-cloud" class="text-secondary mx-auto mb-2" style="width: 3rem; height: 3rem;"></i>
+                                <p class="text-secondary mb-1">Arraste e solte exames, fotos ou documentos aqui</p>
+                                <p class="small text-muted mb-0">ou clique para selecionar os arquivos</p>
+                                <input type="file" id="fileUpload" class="d-none" multiple>
+                            </label>
+
+                            <h3 class="h5 fw-bold text-dark mt-4 mb-3">Documentos Anexados</h3>
+                            <div class="row g-3">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="card card-body flex-row align-items-center gap-3 hover-bg-light border rounded-3 p-3">
+                                        <i data-feather="file-text" class="text-secondary flex-shrink-0" style="width: 2rem; height: 2rem;"></i>
+                                        <div class="flex-grow-1 overflow-hidden">
+                                            <p class="fw-medium text-dark mb-0 text-truncate small">mapa_24h.pdf</p>
+                                            <p class="small text-muted mb-0">20/04/2025 • 2.3 MB</p>
+                                        </div>
+                                        <button class="btn btn-sm btn-link text-secondary p-1 flex-shrink-0" title="Download"><i data-feather="download"></i></button>
+                                        <button class="btn btn-sm btn-link text-danger p-1 flex-shrink-0" title="Excluir"><i data-feather="trash"></i></button>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="card card-body flex-row align-items-center gap-3 hover-bg-light border rounded-3 p-3">
+                                        <i data-feather="file" class="text-secondary flex-shrink-0" style="width: 2rem; height: 2rem;"></i>
+                                        <div class="flex-grow-1 overflow-hidden">
+                                            <p class="fw-medium text-dark mb-0 text-truncate small">hemograma.pdf</p>
+                                            <p class="small text-muted mb-0">18/04/2025 • 1.1 MB</p>
+                                        </div>
+                                        <button class="btn btn-sm btn-link text-secondary p-1 flex-shrink-0" title="Download"><i data-feather="download"></i></button>
+                                        <button class="btn btn-sm btn-link text-danger p-1 flex-shrink-0" title="Excluir"><i data-feather="trash"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <script>
+        // Inicializa Feather Icons
+        feather.replace();
+
+        // Adiciona classe 'feather-sm' para ícones menores
+        document.querySelectorAll('button .feather, a .feather').forEach(icon => {
+            if (icon.closest('.btn-sm, .p-1, .dropdown-item')) { // Adicionado .dropdown-item
+                icon.style.width = '1rem';
+                icon.style.height = '1rem';
+            }
+        });
+
+        // Simulação de clique no input file ao clicar na área de upload
+        const uploadArea = document.querySelector('.upload-area');
+        const fileInput = document.getElementById('fileUpload');
+        if (uploadArea && fileInput) {
+            uploadArea.addEventListener('click', () => fileInput.click());
+            // Você adicionaria aqui a lógica para lidar com drag & drop e seleção de arquivos
+        }
+
+    </script>
+</body>
+
+</html>

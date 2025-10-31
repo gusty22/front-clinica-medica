@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClinicaPi - Pacientes (Bootstrap 5)</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bs-primary: #00A896; --bs-primary-rgb: 0, 168, 150; --bs-primary-dark-rgb: 0, 138, 121; --bs-primary-bg-subtle: rgba(var(--bs-primary-rgb), 0.1);
+            --bs-secondary: #64748b; --bs-secondary-rgb: 94, 96, 206; --bs-secondary-bg-subtle: rgba(var(--bs-secondary-rgb), 0.1);
+            --bs-warning: #FF9E00; /* accent */ --bs-warning-rgb: 255, 158, 0; --bs-warning-bg-subtle: rgba(var(--bs-warning-rgb), 0.1); --bs-warning-text-emphasis: #cc7e00;
+            --bs-danger: #f43f5e; /* rose-500 */ --bs-danger-rgb: 244, 63, 94; --bs-danger-bg-subtle: rgba(var(--bs-danger-rgb), 0.1); --bs-danger-text-emphasis: #f43f5e;
+            --bs-dark: #1E293B; --bs-light: #F8FAFC; --bs-body-bg: var(--bs-light); --bs-border-color: #e2e8f0; --bs-border-color-translucent: rgba(var(--bs-dark-rgb), 0.1);
+            --bs-secondary-color: #64748B; --bs-body-font-family: 'Inter', sans-serif; --bs-border-radius-xl: 0.75rem; --bs-border-radius-lg: 0.5rem;
+        }
+        body { display: flex; height: 100vh; overflow: hidden; font-size: 0.875rem; }
+        .sidebar { width: 260px; min-width: 260px; background-color: var(--bs-white); border-right: 1px solid var(--bs-border-color); transition: width 0.3s ease; }
+        .logo-icon { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-secondary) 100%); }
+        .sidebar .nav-link { color: var(--bs-secondary-color); font-weight: 500; padding: 0.75rem; border-radius: var(--bs-border-radius-lg); }
+        .sidebar .nav-link .feather { width: 20px; height: 20px; color: #94a3b8; }
+        .sidebar .nav-link:hover { background: #f1f5f9; color: var(--bs-dark); }
+        .sidebar .nav-link.active { background: var(--bs-light); color: var(--bs-primary); font-weight: 600; }
+        .sidebar .nav-link.active .feather { color: var(--bs-primary); }
+        .nav-group-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; padding: 0 0.75rem; margin-bottom: 0.5rem; }
+        .user-profile .feather { color: #94a3b8; }
+        .header { height: 64px; background: white; border-bottom: 1px solid var(--bs-border-color); }
+        .search-input { padding-left: 2.5rem; font-size: 0.875rem; border-color: var(--bs-border-color); background-color: var(--bs-light); }
+        .search-input:focus { outline: none; border-color: var(--bs-primary); background: white; box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), 0.1); }
+        .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none; }
+        .action-button { width: 36px; height: 36px; border-radius: 50%; color: #64748b; background: transparent; transition: all 0.2s ease; position: relative; border: none; padding: 0; }
+        .action-button:hover { background: #f1f5f9; color: var(--bs-dark); }
+        .notification-badge { position: absolute; top: 0; right: 0; width: 16px; height: 16px; font-size: 0.625rem; font-weight: 600; background: var(--bs-danger); }
+        .main-content-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        main { flex: 1; overflow-y: auto; background-color: var(--bs-light); }
+        .btn-primary:hover { background-color: rgba(var(--bs-primary-dark-rgb), 1); border-color: rgba(var(--bs-primary-dark-rgb), 1); }
+        .text-primary { color: var(--bs-primary) !important; }
+        .text-secondary { color: var(--bs-secondary-color) !important; } /* Ajustado para cinza */
+        .text-warning { color: var(--bs-warning-text-emphasis) !important; }
+        .text-danger { color: var(--bs-danger-text-emphasis) !important; } /* Corrigido para text-danger */
+        .text-rose-500 { color: var(--bs-danger-text-emphasis) !important; } /* Mapeamento da cor Tailwind */
+        .bg-rose-100 { background-color: var(--bs-danger-bg-subtle) !important; } /* Mapeamento da cor Tailwind */
+        .bg-rose-500 { background-color: var(--bs-danger) !important; } /* Mapeamento da cor Tailwind */
+        .bg-rose-500\/90:hover { background-color: rgba(var(--bs-danger-rgb), 0.9) !important; } /* Mapeamento da cor Tailwind */
+
+        .table>:not(caption)>*>* { padding-top: 1rem; padding-bottom: 1rem; vertical-align: middle; }
+        .table .feather { width: 1.1rem; height: 1.1rem; }
+        .table .btn-link { padding: 0.25rem; }
+        .modal-body { max-height: 70vh; overflow-y: auto; }
+        
+        /* ### ADIÇÃO DE CSS AQUI ### */
+        .feather-sm { 
+            width: 1rem; 
+            height: 1rem; 
+        }
+        /* ### FIM DA ADIÇÃO ### */
+
+        @media (max-width: 768px) {
+           .sidebar { width: 72px; }
+           .sidebar .logo-text, .sidebar .nav-group-title, .sidebar .nav-link span, .sidebar .user-info, .sidebar .user-settings .feather { display: none; }
+           .sidebar .logo { justify-content: center; padding-bottom: 1.5rem; padding-left: 0; padding-right: 0; }
+           .sidebar .nav-link { justify-content: center; }
+           .sidebar .user-profile { justify-content: center; padding-left: 0; padding-right: 0; }
+           .header .search-bar-wrapper { display: none; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar d-flex flex-column vh-100">
+        <div class="d-flex flex-column flex-grow-1 p-3">
+            <div class="logo d-flex align-items-center gap-2 pb-3 mb-3 border-bottom">
+                <div class="logo-icon d-flex align-items-center justify-content-center text-white">
+                    <i data-feather="activity" style="width: 18px; height: 18px;"></i>
+                </div>
+                <span class="logo-text fs-5 fw-bold text-dark">ClinicaPi</span>
+            </div>
+            <nav class="nav nav-pills flex-column flex-grow-1">
+                <div class="nav-group mb-3">
+                    <div class="nav-group-title">Geral</div>
+                    <a class="nav-link d-flex align-items-center gap-2" href="dashboard.html">
+                        <i data-feather="home" class="nav-icon"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2" href="agenda.html">
+                        <i data-feather="calendar" class="nav-icon"></i>
+                        <span>Agenda</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2 active" href="pacientes.html"> <i data-feather="users" class="nav-icon"></i>
+                        <span>Pacientes</span>
+                    </a>
+                </div>
+                <div class="nav-group mb-3">
+                    <div class="nav-group-title">Financeiro</div>
+                    <a class="nav-link d-flex align-items-center gap-2" href="financeiro.html">
+                        <i data-feather="dollar-sign" class="nav-icon"></i>
+                        <span>Financeiro</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2" href="notas-fiscais.html">
+                        <i data-feather="file-text" class="nav-icon"></i>
+                        <span>Notas Fiscais</span>
+                    </a>
+                </div>
+                <div class="nav-group mb-3">
+                    <div class="nav-group-title">Administrativo</div>
+                    <a class="nav-link d-flex align-items-center gap-2" href="prontuarios.html">
+                        <i data-feather="clipboard" class="nav-icon"></i>
+                        <span>Prontuários</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2" href="relatorios.html">
+                        <i data-feather="pie-chart" class="nav-icon"></i>
+                        <span>Relatórios</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2" href="configuracoes.html">
+                        <i data-feather="settings" class="nav-icon"></i>
+                        <span>Configurações</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+        
+        <div class="user-profile p-3 border-top dropup">
+             <a href="#" class="d-flex align-items-center gap-2 text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;">
+                <div class="user-avatar rounded-circle bg-primary-subtle d-flex align-items-center justify-content-center text-primary" style="width: 36px; height: 36px;">
+                    <i data-feather="user"></i>
+                </div>
+                <div class="user-info flex-grow-1 lh-sm">
+                    <div class="user-name fw-medium small text-dark">Dr. Silva</div>
+                    <div class="user-role small text-muted">Médico</div>
+                </div>
+                <div class="user-settings">
+                    <i data-feather="chevron-down"></i>
+                </div>
+            </a>
+            <ul class="dropdown-menu shadow-sm" style="font-size: 0.875rem; width: calc(100% - 1.5rem); margin-left: 0.75rem;">
+                <li><a class="dropdown-item d-flex align-items-center gap-2" href="#"><i data-feather="user" class="feather-sm"></i> Meu Perfil</a></li>
+                <li><a class="dropdown-item d-flex align-items-center gap-2" href="configuracoes.html"><i data-feather="settings" class="feather-sm"></i> Configurações</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item d-flex align-items-center gap-2 text-danger" href="login.html"><i data-feather="log-out" class="feather-sm"></i> Sair</a></li>
+            </ul>
+        </div>
+        </aside>
+
+    <div class="main-content-wrapper">
+
+        <header class="header d-flex align-items-center px-4">
+            <div class="search-bar-wrapper flex-grow-1 mx-md-4" style="max-width: 500px;">
+                <div class="input-group input-group-sm position-relative">
+                    <span class="search-icon"><i data-feather="search"></i></span>
+                    <input type="text" class="form-control search-input" placeholder="Pesquisar...">
+                </div>
+            </div>
+            <div class="header-actions ms-auto d-flex align-items-center gap-2">
+                <button class="action-button">
+                    <i data-feather="bell"></i>
+                    <span class="notification-badge badge rounded-pill">3</span>
+                </button>
+                <button class="action-button">
+                    <i data-feather="message-square"></i>
+                    <span class="notification-badge badge rounded-pill">1</span>
+                </button>
+                
+                <div class="user-menu dropdown">
+                    <a href="#" class="d-flex align-items-center gap-2 text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
+                        <div class="user-avatar rounded-circle bg-primary-subtle d-flex align-items-center justify-content-center text-primary" style="width: 36px; height: 36px;">
+                            <i data-feather="user"></i>
+                        </div>
+                        <i data-feather="chevron-down" class="text-secondary"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="font-size: 0.875rem;">
+                        <li><a class="dropdown-item d-flex align-items-center gap-2" href="#"><i data-feather="user" class="feather-sm"></i> Meu Perfil</a></li>
+                        <li><a class="dropdown-item d-flex align-items-center gap-2" href="configuracoes.html"><i data-feather="settings" class="feather-sm"></i> Configurações</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item d-flex align-items-center gap-2 text-danger" href="login.html"><i data-feather="log-out" class="feather-sm"></i> Sair</a></li>
+                    </ul>
+                </div>
+                </div>
+        </header>
+
+        <main class="p-4">
+            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between mb-4">
+                <div>
+                    <h1 class="h3 fw-bold text-dark mb-1">Gestão de Pacientes</h1>
+                    <p class="text-secondary mb-0">Cadastre, edite e visualize os pacientes da clínica</p>
+                </div>
+                <div class="mt-3 mt-md-0">
+                    <button id="open-modal-btn" class="btn btn-primary d-inline-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#pacienteModal" onclick="prepareCreateModal()">
+                        <i data-feather="plus" style="width: 1em; height: 1em;"></i> Novo Paciente
+                    </button>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 rounded-4 mb-4">
+                <div class="card-body p-3 d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+                    <div class="input-group input-group-sm w-100" style="max-width: 320px;">
+                        <span class="input-group-text bg-light border-end-0">
+                            <i data-feather="search" class="text-secondary" style="width: 1rem; height: 1rem;"></i>
+                        </span>
+                        <input type="search" class="form-control form-control-sm bg-light border-start-0" placeholder="Buscar por nome ou CPF...">
+                    </div>
+                    <div class="d-flex align-items-center gap-2 w-100 w-md-auto">
+                        <select class="form-select form-select-sm" style="min-width: 180px;">
+                            <option selected>Ordenar por: Mais Recentes</option>
+                            <option>Ordenar por: Ordem Alfabética</option>
+                        </select>
+                        <button class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center">
+                            <i data-feather="filter"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr class="text-start text-secondary small">
+                                <th class="px-4 py-3 fw-medium">Paciente</th>
+                                <th class="px-4 py-3 fw-medium">CPF</th>
+                                <th class="px-4 py-3 fw-medium">Telefone</th>
+                                <th class="px-4 py-3 fw-medium">Última Consulta</th>
+                                <th class="px-4 py-3 fw-medium">Status</th>
+                                <th class="px-4 py-3 fw-medium text-end">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="hover-bg-light">
+                                <td class="px-4 py-3">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img class="rounded-circle" src="https://ui-avatars.com/api/?name=Carlos+Ferreira&background=random&size=36" alt="Carlos">
+                                        <div>
+                                            <p class="fw-medium text-dark mb-0 small">Carlos Ferreira</p>
+                                            <p class="small text-muted mb-0">carlos.f@email.com</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-secondary small">123.456.789-00</td>
+                                <td class="px-4 py-3 text-secondary small">(34) 99999-9999</td>
+                                <td class="px-4 py-3 text-secondary small">02/05/2025</td>
+                                <td class="px-4 py-3">
+                                    <span class="badge rounded-pill fw-medium text-primary bg-primary-subtle border border-primary-subtle">Ativo</span>
+                                </td>
+                                <td class="px-4 py-3 text-end">
+                                    <div class="d-flex gap-1 justify-content-end">
+                                        <a href="paciente-detalhe.html" class="btn btn-sm btn-link text-secondary p-1" title="Ver Prontuário">
+                                            <i data-feather="file-text"></i>
+                                        </a>
+                                        <button class="btn btn-sm btn-link text-primary p-1" title="Editar" data-bs-toggle="modal" data-bs-target="#pacienteModal" onclick="prepareEditModal()">
+                                            <i data-feather="edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-link text-danger p-1" title="Excluir" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                            <i data-feather="trash-2"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover-bg-light">
+                                <td class="px-4 py-3">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img class="rounded-circle" src="https://ui-avatars.com/api/?name=Ana+Souza&background=random&size=36" alt="Ana">
+                                        <div>
+                                            <p class="fw-medium text-dark mb-0 small">Ana Souza</p>
+                                            <p class="small text-muted mb-0">ana.souza@email.com</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-secondary small">987.654.321-00</td>
+                                <td class="px-4 py-3 text-secondary small">(34) 98888-8888</td>
+                                <td class="px-4 py-3 text-secondary small">30/04/2025</td>
+                                <td class="px-4 py-3">
+                                    <span class="badge rounded-pill fw-medium text-primary bg-primary-subtle border border-primary-subtle">Ativo</span>
+                                </td>
+                                <td class="px-4 py-3 text-end">
+                                    <div class="d-flex gap-1 justify-content-end">
+                                        <a href="paciente-detalhe.html" class="btn btn-sm btn-link text-secondary p-1" title="Ver Prontuário">
+                                            <i data-feather="file-text"></i>
+                                        </a>
+                                        <button class="btn btn-sm btn-link text-primary p-1" title="Editar" data-bs-toggle="modal" data-bs-target="#pacienteModal" onclick="prepareEditModal()">
+                                            <i data-feather="edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-link text-danger p-1" title="Excluir" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                            <i data-feather="trash-2"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer bg-white p-3 d-flex align-items-center justify-content-between small border-top">
+                    <p class="text-secondary mb-0">Mostrando 1-10 de 50 pacientes</p>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-secondary">Anterior</button>
+                        <button class="btn btn-outline-secondary">Próximo</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal fade" id="pacienteModal" tabindex="-1" aria-labelledby="pacienteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-header border-bottom p-4">
+                    <h1 class="modal-title fs-5 fw-bold text-dark" id="pacienteModalLabel">Novo Paciente</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="pacienteForm">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="nome" class="form-label small">Nome Completo</label>
+                                <input type="text" class="form-control form-control-sm" id="nome" placeholder="Ex: Carlos Ferreira" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label small">E-mail</label>
+                                <input type="email" class="form-control form-control-sm" id="email" placeholder="Ex: carlos.f@email.com">
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label for="cpf" class="form-label small">CPF</label>
+                                <input type="text" class="form-control form-control-sm" id="cpf" placeholder="000.000.000-00">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="nascimento" class="form-label small">Data de Nascimento</label>
+                                <input type="date" class="form-control form-control-sm" id="nascimento">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="telefone" class="form-label small">Telefone</label>
+                                <input type="tel" class="form-control form-control-sm" id="telefone" placeholder="(00) 00000-0000">
+                            </div>
+                        </div>
+                        <hr class="my-4">
+                        <h4 class="h6 fw-medium text-dark mb-3">Endereço</h4>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="cep" class="form-label small">CEP</label>
+                                <input type="text" class="form-control form-control-sm" id="cep" placeholder="00000-000">
+                            </div>
+                            <div class="col-md-8">
+                                <label for="rua" class="form-label small">Rua</label>
+                                <input type="text" class="form-control form-control-sm" id="rua">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer bg-light border-top p-3 d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" form="pacienteForm" class="btn btn-sm btn-primary">Salvar Paciente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-body p-4">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle bg-danger-subtle text-danger" style="width: 48px; height: 48px;">
+                            <i data-feather="alert-triangle"></i>
+                        </div>
+                        <div>
+                            <h1 class="modal-title fs-5 fw-bold text-dark" id="deleteModalLabel">Excluir Paciente</h1>
+                            <p class="small text-secondary mt-1 mb-0">Tem certeza que deseja excluir "Carlos Ferreira"? Esta ação não pode ser desfeita.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-top px-3 py-2 d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-sm btn-danger">Sim, excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <script>
+        // Inicializa Feather Icons
+        feather.replace();
+
+        // Lógica dos Modals Bootstrap
+        const pacienteModalElement = document.getElementById('pacienteModal');
+        const pacienteModal = new bootstrap.Modal(pacienteModalElement);
+        const modalTitle = document.getElementById('pacienteModalLabel');
+        const pacienteForm = document.getElementById('pacienteForm'); // Formulário
+
+        // Função para preparar modal de CRIAÇÃO
+        function prepareCreateModal() {
+            modalTitle.textContent = 'Novo Paciente';
+            pacienteForm.reset(); // Limpa o formulário
+            // Limpar outros campos ou IDs se necessário
+        }
+
+        // Função para preparar modal de EDIÇÃO (Exemplo)
+        function prepareEditModal() {
+            modalTitle.textContent = 'Editar Paciente';
+            // Pré-preencher o formulário - Exemplo estático:
+            document.getElementById('nome').value = 'Carlos Ferreira';
+            document.getElementById('email').value = 'carlos.f@email.com';
+            document.getElementById('cpf').value = '123.456.789-00';
+            // ... preencher outros campos
+            // Você precisaria buscar os dados reais do paciente clicado aqui
+        }
+
+        // Você pode adicionar um event listener ao formulário se quiser fazer algo antes de salvar
+        pacienteForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+            console.log('Salvando paciente...');
+            // Aqui você adicionaria a lógica para salvar os dados (AJAX, etc.)
+            pacienteModal.hide(); // Fecha o modal após salvar (exemplo)
+        });
+        
+        // Adiciona classe 'feather-sm' para ícones menores (NOVO - para dropdown)
+         document.querySelectorAll('button .feather, a .feather').forEach(icon => {
+            if (icon.closest('.btn-sm, .p-1, .px-2.py-1, .dropdown-item')) { // Adicionado .dropdown-item
+                icon.style.width = '1rem'; icon.style.height = '1rem';
+            }
+        });
+
+    </script>
+</body>
+
+</html>
