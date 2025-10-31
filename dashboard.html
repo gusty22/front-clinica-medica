@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClinicaPi - Dashboard (Bootstrap 5)</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* Define a paleta de cores personalizada do Bootstrap */
+        :root {
+            --bs-primary: #00A896;
+            --bs-primary-rgb: 0, 168, 150;
+            --bs-primary-dark-rgb: 0, 138, 121;
+            /* Calculado para hover */
+            --bs-primary-bg-subtle: rgba(var(--bs-primary-rgb), 0.1);
+
+            --bs-secondary: #5E60CE;
+            --bs-secondary-rgb: 94, 96, 206;
+            --bs-secondary-bg-subtle: rgba(var(--bs-secondary-rgb), 0.1);
+
+            --bs-warning: #FF9E00;
+            /* accent */
+            --bs-warning-rgb: 255, 158, 0;
+            --bs-warning-bg-subtle: rgba(var(--bs-warning-rgb), 0.1);
+            --bs-warning-text-emphasis: #cc7e00;
+
+            --bs-danger: #f43f5e;
+            /* rose-500 */
+            --bs-danger-rgb: 244, 63, 94;
+            --bs-danger-bg-subtle: rgba(var(--bs-danger-rgb), 0.1);
+            --bs-danger-text-emphasis: #f43f5e;
+
+            --bs-dark: #1E293B;
+            --bs-light: #F8FAFC;
+            --bs-body-bg: var(--bs-light);
+            --bs-border-color: #e2e8f0;
+            /* Cor da borda original */
+            --bs-border-color-translucent: rgba(var(--bs-dark-rgb), 0.1);
+            /* Bordas mais suaves */
+            --bs-secondary-color: #64748B;
+            /* Cor cinza texto */
+            --bs-body-font-family: 'Inter', sans-serif;
+            --bs-border-radius-xl: 0.75rem;
+            /* rounded-xl */
+            --bs-border-radius-lg: 0.5rem;
+            /* rounded-lg */
+        }
+
+        /* Layout Principal */
+        body {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            font-size: 0.875rem;
+            /* Equivalente a text-sm Tailwind */
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            min-width: 260px;
+            background-color: var(--bs-white);
+            border-right: 1px solid var(--bs-border-color);
+            transition: width 0.3s ease;
+        }
+
+        /* Estilo do ícone do logo */
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-secondary) 100%);
+        }
+
+        /* Ajustes nos links da Sidebar */
+        .sidebar .nav-link {
+            color: var(--bs-secondary-color);
+            font-weight: 500;
+            padding: 0.75rem;
+            /* Equivalente ao padding original */
+            border-radius: var(--bs-border-radius-lg);
+        }
+
+        .sidebar .nav-link .feather {
+            width: 20px;
+            height: 20px;
+            color: #94a3b8;
+            /* Cinza para ícones inativos */
+        }
+
+        .sidebar .nav-link:hover {
+            background: #f1f5f9;
+            /* cinza claro hover */
+            color: var(--bs-dark);
+        }
+
+        .sidebar .nav-link.active {
+            background: var(--bs-light);
+            color: var(--bs-primary);
+            font-weight: 600;
+        }
+
+        .sidebar .nav-link.active .feather {
+            color: var(--bs-primary);
+        }
+
+        .nav-group-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            padding: 0 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-profile .feather {
+            color: #94a3b8;
+        }
+
+        /* Header */
+        .header {
+            height: 64px;
+            background: white;
+            border-bottom: 1px solid var(--bs-border-color);
+        }
+
+        .search-input {
+            padding-left: 2.5rem;
+            /* Espaço para o ícone */
+            font-size: 0.875rem;
+            border-color: var(--bs-border-color);
+            background-color: var(--bs-light);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--bs-primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            pointer-events: none;
+        }
+
+        .action-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: #64748b;
+            background: transparent;
+            transition: all 0.2s ease;
+            position: relative;
+            border: none;
+            padding: 0;
+        }
+
+        .action-button:hover {
+            background: #f1f5f9;
+            color: var(--bs-dark);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 16px;
+            height: 16px;
+            font-size: 0.625rem;
+            font-weight: 600;
+            background: var(--bs-danger);
+        }
+
+        /* Conteúdo Principal */
+        .main-content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        main {
+            flex: 1;
+            overflow-y: auto;
+            background-color: var(--bs-light);
+        }
+
+        /* Cor do texto para bg-subtle */
+        .text-primary {
+            color: var(--bs-primary) !important;
+        }
+
+        .text-secondary {
+            color: var(--bs-secondary) !important;
+        }
+
+        .text-warning {
+            color: var(--bs-warning-text-emphasis) !important;
+        }
+
+        .text-danger {
+            color: var(--bs-danger-text-emphasis) !important;
+        }
+
+        /* Ajustes na tabela */
+        .table>:not(caption)>*>* {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            vertical-align: middle;
+        }
+
+        .table .feather {
+            width: 1.1rem;
+            height: 1.1rem;
+        }
+
+        .avatar-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .table .btn-link {
+            padding: 0.25rem;
+        }
+
+        .text-secondary {
+            /* Corrige conflito - botões da tabela */
+            color: var(--bs-secondary-color) !important;
+        }
+
+        .btn-link.text-secondary:hover {
+            color: #505a6a !important;
+        }
+
+        /* Altura do Gráfico */
+        .chart-container {
+            height: 270px;
+            /* Equivalente a h-64 */
+            position: relative;
+        }
+
+        /* CSS do Modal */
+        .modal-body {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--bs-primary);
+            box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.1);
+        }
+
+        /* ### ADIÇÃO DE CSS AQUI ### */
+        .feather-sm {
+            width: 1rem;
+            height: 1rem;
+        }
+        /* ### FIM DA ADIÇÃO ### */
+
+
+        /* Responsividade (imitando o CSS original) */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 72px;
+                /* Largura colapsada */
+            }
+
+            .sidebar .logo-text,
+            .sidebar .nav-group-title,
+            .sidebar .nav-link span,
+            .sidebar .user-info,
+            .sidebar .user-settings .feather {
+                display: none;
+            }
+
+            .sidebar .logo {
+                justify-content: center;
+                padding-bottom: 1.5rem;
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .sidebar .nav-link {
+                justify-content: center;
+            }
+
+            .sidebar .user-profile {
+                justify-content: center;
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .header .search-bar-wrapper {
+                display: none;
+                /* Esconde barra de pesquisa em mobile */
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar d-flex flex-column vh-100">
+        <div class="d-flex flex-column flex-grow-1 p-3">
+            <div class="logo d-flex align-items-center gap-2 pb-3 mb-3 border-bottom">
+                <div class="logo-icon d-flex align-items-center justify-content-center text-white">
+                    <i data-feather="activity" style="width: 18px; height: 18px;"></i>
+                </div>
+                <span class="logo-text fs-5 fw-bold text-dark">ClinicaPi</span>
+            </div>
+
+            <nav class="nav nav-pills flex-column flex-grow-1">
+                <div class="nav-group mb-3">
+                    <div class="nav-group-title">Geral</div>
+                    <a class="nav-link d-flex align-items-center gap-2 active" href="dashboard.html">
+                        <i data-feather="home" class="nav-icon"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2" href="agenda.html">
+                        <i data-feather="calendar" class="nav-icon"></i>
+                        <span>Agenda</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2" href="pacientes.html">
+                        <i data-feather="users" class="nav-icon"></i>
+                        <span>Pacientes</span>
+                    </a>
+                </div>
+                <div class="nav-group mb-3">
+                    <div class="nav-group-title">Financeiro</div>
+                    <a class="nav-link d-flex align-items-center gap-2" href="financeiro.html">
+                        <i data-feather="dollar-sign" class="nav-icon"></i>
+                        <span>Financeiro</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2" href="notas-fiscais.html">
+                        <i data-feather="file-text" class="nav-icon"></i>
+                        <span>Notas Fiscais</span>
+                    </a>
+                </div>
+                <div class="nav-group mb-3">
+                    <div class="nav-group-title">Administrativo</div>
+                    <a class="nav-link d-flex align-items-center gap-2" href="prontuarios.html">
+                        <i data-feather="clipboard" class="nav-icon"></i>
+                        <span>Prontuários</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2" href="relatorios.html">
+                        <i data-feather="pie-chart" class="nav-icon"></i>
+                        <span>Relatórios</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2" href="configuracoes.html">
+                        <i data-feather="settings" class="nav-icon"></i>
+                        <span>Configurações</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+        
+        <div class="user-profile p-3 border-top dropup">
+            <a href="#" class="d-flex align-items-center gap-2 text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;">
+                <div class="user-avatar rounded-circle bg-primary-subtle d-flex align-items-center justify-content-center text-primary"
+                    style="width: 36px; height: 36px;">
+                    <i data-feather="user"></i>
+                </div>
+                <div class="user-info flex-grow-1 lh-sm">
+                    <div class="user-name fw-medium small text-dark">Dr. Silva</div>
+                    <div class="user-role small text-muted">Médico</div>
+                </div>
+                <div class="user-settings">
+                    <i data-feather="chevron-down"></i>
+                </div>
+            </a>
+            <ul class="dropdown-menu shadow-sm" style="font-size: 0.875rem; width: calc(100% - 1.5rem); margin-left: 0.75rem;">
+                <li><a class="dropdown-item d-flex align-items-center gap-2" href="#"><i data-feather="user" class="feather-sm"></i> Meu Perfil</a></li>
+                <li><a class="dropdown-item d-flex align-items-center gap-2" href="configuracoes.html"><i data-feather="settings" class="feather-sm"></i> Configurações</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item d-flex align-items-center gap-2 text-danger" href="login.html"><i data-feather="log-out" class="feather-sm"></i> Sair</a></li>
+            </ul>
+        </div>
+        </aside>
+
+    <div class="main-content-wrapper">
+
+        <header class="header d-flex align-items-center px-4">
+            <div class="search-bar-wrapper flex-grow-1 mx-md-4" style="max-width: 500px;">
+                <div class="input-group input-group-sm position-relative">
+                    <span class="search-icon"><i data-feather="search"></i></span>
+                    <input type="text" class="form-control search-input" placeholder="Pesquisar...">
+                </div>
+            </div>
+
+            <div class="header-actions ms-auto d-flex align-items-center gap-2">
+                <button class="action-button">
+                    <i data-feather="bell"></i>
+                    <span class="notification-badge badge rounded-pill">3</span>
+                </button>
+                <button class="action-button">
+                    <i data-feather="message-square"></i>
+                    <span class="notification-badge badge rounded-pill">1</span>
+                </button>
+
+                <div class="user-menu dropdown">
+                    <a href="#" class="d-flex align-items-center gap-2 text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
+                        <div class="user-avatar rounded-circle bg-primary-subtle d-flex align-items-center justify-content-center text-primary"
+                            style="width: 36px; height: 36px;">
+                            <i data-feather="user"></i>
+                        </div>
+                        <i data-feather="chevron-down" class="text-secondary"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="font-size: 0.875rem;">
+                        <li><a class="dropdown-item d-flex align-items-center gap-2" href="#"><i data-feather="user" class="feather-sm"></i> Meu Perfil</a></li>
+                        <li><a class="dropdown-item d-flex align-items-center gap-2" href="configuracoes.html"><i data-feather="settings" class="feather-sm"></i> Configurações</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item d-flex align-items-center gap-2 text-danger" href="login.html"><i data-feather="log-out" class="feather-sm"></i> Sair</a></li>
+                    </ul>
+                </div>
+                </div>
+        </header>
+
+        <main class="p-4">
+            <div class="card shadow-sm border-0 rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between">
+                        <div>
+                            <h1 class="h3 fw-bold text-dark mb-1">Bem-vindo, Dr. Silva</h1>
+                            <p class="text-secondary mb-0">Aqui está o resumo da sua clínica hoje</p>
+                        </div>
+                        <div class="mt-3 mt-md-0">
+                            <button class="btn btn-primary d-inline-flex align-items-center gap-2">
+                                <i data-feather="plus" style="width: 1em; height: 1em;"></i> Nova Consulta
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-sm-6 col-xl-3">
+                    <div class="card shadow-sm border-0 rounded-4 h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <p class="text-secondary small mb-1">Consultas Hoje</p>
+                                    <h3 class="h4 fw-bold text-dark mb-0">12</h3>
+                                </div>
+                                <div class="p-2 rounded-3 bg-primary-subtle text-primary">
+                                    <i data-feather="calendar"></i>
+                                </div>
+                            </div>
+                            <p class="small text-secondary mt-2 mb-0">+2 em relação a ontem</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xl-3">
+                    <div class="card shadow-sm border-0 rounded-4 h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <p class="text-secondary small mb-1">Receita do Dia</p>
+                                    <h3 class="h4 fw-bold text-dark mb-0">R$ 3.450</h3>
+                                </div>
+                                <div class="p-2 rounded-3 bg-secondary-subtle text-secondary">
+                                    <i data-feather="dollar-sign"></i>
+                                </div>
+                            </div>
+                            <p class="small text-secondary mt-2 mb-0">15% acima da média</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xl-3">
+                    <div class="card shadow-sm border-0 rounded-4 h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <p class="text-secondary small mb-1">Novos Pacientes</p>
+                                    <h3 class="h4 fw-bold text-dark mb-0">4</h3>
+                                </div>
+                                <div class="p-2 rounded-3 bg-warning-subtle text-warning">
+                                    <i data-feather="users"></i>
+                                </div>
+                            </div>
+                            <p class="small text-secondary mt-2 mb-0">+1 em relação à semana passada</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xl-3">
+                    <div class="card shadow-sm border-0 rounded-4 h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <p class="text-secondary small mb-1">Consultas Pendentes</p>
+                                    <h3 class="h4 fw-bold text-dark mb-0">8</h3>
+                                </div>
+                                <div class="p-2 rounded-3 bg-danger-subtle text-danger">
+                                    <i data-feather="clock"></i>
+                                </div>
+                            </div>
+                            <p class="small text-secondary mt-2 mb-0">2 aguardando confirmação</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-lg-7">
+                    <div class="card shadow-sm border-0 rounded-4 h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <h3 class="h5 fw-bold text-dark mb-0">Receita Semanal</h3>
+                                <select class="form-select form-select-sm" style="width: auto;">
+                                    <option selected>Últimos 7 dias</option>
+                                    <option>Últimos 30 dias</option>
+                                </select>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="card shadow-sm border-0 rounded-4 h-100">
+                        <div class="card-body p-4 d-flex flex-column">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <h3 class="h5 fw-bold text-dark mb-0">Agenda de Hoje</h3>
+                                <a href="agenda.html"
+                                    class="btn btn-link btn-sm text-primary p-0 text-decoration-none">Ver tudo</a>
+                            </div>
+                            <div class="list-group list-group-flush flex-grow-1">
+                                <div
+                                    class="list-group-item list-group-item-action d-flex align-items-start gap-3 px-0 py-3 border-bottom-0">
+                                    <div class="p-2 rounded-3 bg-primary-subtle text-primary">
+                                        <i data-feather="clock"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h4 class="fw-medium text-dark mb-0 small">Carlos Ferreira</h4>
+                                        <p class="small text-secondary mb-0">09:00 - 09:30 • Consulta de retorno</p>
+                                    </div>
+                                    <button class="btn btn-sm btn-link text-secondary p-0">
+                                        <i data-feather="more-vertical"></i>
+                                    </button>
+                                </div>
+                                <div
+                                    class="list-group-item list-group-item-action d-flex align-items-start gap-3 px-0 py-3 border-bottom-0">
+                                    <div class="p-2 rounded-3 bg-secondary-subtle text-secondary">
+                                        <i data-feather="clock"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h4 class="fw-medium text-dark mb-0 small">Ana Souza</h4>
+                                        <p class="small text-secondary mb-0">10:15 - 11:00 • Primeira consulta</p>
+                                    </div>
+                                    <button class="btn btn-sm btn-link text-secondary p-0">
+                                        <i data-feather="more-vertical"></i>
+                                    </button>
+                                </div>
+                                <div
+                                    class="list-group-item list-group-item-action d-flex align-items-start gap-3 px-0 py-3 border-bottom-0">
+                                    <div class="p-2 rounded-3 bg-warning-subtle text-warning">
+                                        <i data-feather="clock"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h4 class="fw-medium text-dark mb-0 small">Maria Oliveira</h4>
+                                        <p class="small text-secondary mb-0">14:30 - 15:15 • Acompanhamento</p>
+                                    </div>
+                                    <button class="btn btn-sm btn-link text-secondary p-0">
+                                        <i data-feather="more-vertical"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h3 class="h5 fw-bold text-dark mb-0">Pacientes Recentes</h3>
+                        <a href="pacientes.html" class="btn btn-link btn-sm text-primary p-0 text-decoration-none">Ver
+                            todos</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr class="text-start text-secondary small">
+                                    <th class="fw-medium pb-3 ps-3">Paciente</th>
+                                    <th class="fw-medium pb-3">CPF</th>
+                                    <th class="fw-medium pb-3">Telefone</th>
+                                    <th class="fw-medium pb-3">Última Consulta</th>
+                                    <th class="fw-medium pb-3">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="ps-3">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="avatar-icon bg-primary-subtle text-primary">
+                                                <i data-feather="user"></i>
+                                            </div>
+                                            <span class="fw-medium small">Carlos Ferreira</span>
+                                        </div>
+                                    </td>
+                                    <td class="small">123.456.789-00</td>
+                                    <td class="small">(34) 99999-9999</td>
+                                    <td class="small">02/05/2025</td>
+                                    <td>
+                                        <div class="d-flex gap-1">
+
+                                            <button class="btn btn-sm btn-link text-primary p-1" title="Editar"
+                                                data-bs-toggle="modal" data-bs-target="#pacienteModal"
+                                                onclick="prepareEditModal('Carlos Ferreira', 'carlos.f@email.com', '123.456.789-00')">
+                                                <i data-feather="edit"></i>
+                                            </button>
+
+                                            <a href="paciente-detalhe.html"
+                                                class="btn btn-sm btn-link text-secondary p-1" title="Ver Prontuário">
+                                                <i data-feather="file-text"></i>
+                                            </a>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-3">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="avatar-icon bg-primary-subtle text-primary">
+                                                <i data-feather="user"></i>
+                                            </div>
+                                            <span class="fw-medium small">Ana Souza</span>
+                                        </div>
+                                    </td>
+                                    <td class="small">987.654.321-00</td>
+                                    <td class="small">(34) 98888-8888</td>
+                                    <td class="small">30/04/2025</td>
+                                    <td>
+                                        <div class="d-flex gap-1">
+
+                                            <button class="btn btn-sm btn-link text-primary p-1" title="Editar"
+                                                data-bs-toggle="modal" data-bs-target="#pacienteModal"
+                                                onclick="prepareEditModal('Ana Souza', 'ana.souza@email.com', '987.654.321-00')">
+                                                <i data-feather="edit"></i>
+                                            </button>
+
+                                            <a href="paciente-detalhe.html"
+                                                class="btn btn-sm btn-link text-secondary p-1" title="Ver Prontuário">
+                                                <i data-feather="file-text"></i>
+                                            </a>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal fade" id="pacienteModal" tabindex="-1" aria-labelledby="pacienteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-header border-bottom p-4">
+                    <h1 class="modal-title fs-5 fw-bold text-dark" id="pacienteModalLabel">Editar Paciente</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="pacienteForm">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="nome" class="form-label small">Nome Completo</label>
+                                <input type="text" class="form-control form-control-sm" id="nome"
+                                    placeholder="Ex: Carlos Ferreira" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label small">E-mail</label>
+                                <input type="email" class="form-control form-control-sm" id="email"
+                                    placeholder="Ex: carlos.f@email.com">
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label for="cpf" class="form-label small">CPF</label>
+                                <input type="text" class="form-control form-control-sm" id="cpf"
+                                    placeholder="000.000.000-00">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="nascimento" class="form-label small">Data de Nascimento</label>
+                                <input type="date" class="form-control form-control-sm" id="nascimento">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="telefone" class="form-label small">Telefone</label>
+                                <input type="tel" class="form-control form-control-sm" id="telefone"
+                                    placeholder="(00) 00000-0000">
+                            </div>
+                        </div>
+                        <div class="border-top pt-4">
+                            <h4 class="h6 fw-medium text-dark mb-3">Endereço</h4>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="cep" class="form-label small">CEP</label>
+                                    <input type="text" id="cep" class="form-control form-control-sm"
+                                        placeholder="00000-000">
+                                </div>
+                                <div class="col-md-8">
+                                    <label for="rua" class="form-label small">Rua</label>
+                                    <input type="text" id="rua" class="form-control form-control-sm">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer bg-light border-top p-3 d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                        data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" form="pacienteForm" class="btn btn-sm btn-primary">Salvar Alterações</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Inicializa Feather Icons
+        feather.replace();
+
+        // ===================================
+        // ### SCRIPT DO MODAL ADICIONADO AQUI ###
+        // ===================================
+        const pacienteModalElement = document.getElementById('pacienteModal');
+        const pacienteModal = new bootstrap.Modal(pacienteModalElement);
+        const modalTitle = document.getElementById('pacienteModalLabel');
+        const pacienteForm = document.getElementById('pacienteForm');
+
+        // Função para preparar modal de CRIAÇÃO (placeholder, caso você adicione um botão "Novo" aqui)
+        function prepareCreateModal() {
+            modalTitle.textContent = 'Novo Paciente';
+            pacienteForm.reset(); // Limpa o formulário
+        }
+
+        // Função para preparar modal de EDIÇÃO (conforme seu exemplo)
+        function prepareEditModal(nome, email, cpf) {
+            modalTitle.textContent = 'Editar Paciente';
+
+            // Pré-preencher o formulário com dados da tabela
+            document.getElementById('nome').value = nome || '';
+            document.getElementById('email').value = email || '';
+            document.getElementById('cpf').value = cpf || '';
+
+            // Limpa campos não passados (exemplo)
+            document.getElementById('nascimento').value = '';
+            document.getElementById('telefone').value = '';
+            document.getElementById('cep').value = '';
+            document.getElementById('rua').value = '';
+        }
+
+        // Limpa o formulário quando o modal é fechado
+        pacienteModalElement.addEventListener('hidden.bs.modal', event => {
+            pacienteForm.reset();
+            modalTitle.textContent = 'Editar Paciente'; // Reseta o título
+        });
+
+        // Lógica de salvar (placeholder)
+        pacienteForm.addEventListener('submit', function (event) {
+            event.preventDefault(); // Impede o envio real
+            console.log('Salvando alterações...');
+            pacienteModal.hide(); // Fecha o modal
+        });
+        // ===================================
+        // FIM DO SCRIPT DO MODAL
+        // ===================================
+
+
+        // Inicializa Chart.js
+        document.addEventListener('DOMContentLoaded', function () {
+            const revenueCtx = document.getElementById('revenueChart');
+            if (revenueCtx) {
+                const revenueChart = new Chart(revenueCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                        datasets: [{
+                            label: 'Receita (R$)',
+                            data: [1200, 1900, 1500, 2000, 2200, 1800, 2500],
+                            borderColor: getComputedStyle(document.documentElement).getPropertyValue('--bs-primary').trim(), // Usa a variável CSS
+                            backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--bs-primary-bg-subtle').trim(),
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true,
+                            pointBackgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--bs-primary').trim(),
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                callbacks: {
+                                    label: function (context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(context.parsed.y);
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(0,0,0,0.05)' // Linhas do grid mais suaves
+                                },
+                                ticks: {
+                                    callback: function (value, index, values) {
+                                        return 'R$ ' + value / 1000 + 'k'; // Formata eixo Y
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false // Remove linhas verticais do grid
+                                }
+                            }
+                        },
+                        hover: {
+                            mode: 'nearest',
+                            intersect: true
+                        }
+                    }
+                });
+            } else {
+                console.error("Elemento canvas 'revenueChart' não encontrado.");
+            }
+        });
+    </script>
+</body>
+
+</html>
