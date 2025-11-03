@@ -87,6 +87,13 @@
         #togglePassword {
             cursor: pointer;
         }
+
+        /* Adicionado para o link de voltar */
+        .feather-sm-link {
+            width: 1em; 
+            height: 1em; 
+            vertical-align: -0.125em; /* Alinha o ícone com o texto */
+        }
     </style>
 </head>
 
@@ -111,7 +118,8 @@
                 <h2 class="h3 fw-bold text-center text-dark mb-2">Bem-vindo de volta</h2>
                 <p class="text-muted text-center mb-4">Entre na sua conta para continuar</p>
 
-                <form action="dashboard.html" method="GET"> <div class="mb-3">
+                <form action="dashboard.html" method="GET">
+                    <div class="mb-3">
                         <label for="email" class="form-label">E-mail</label>
                         <div class="input-group">
                             <span class="input-group-text bg-white">
@@ -144,7 +152,7 @@
                             </label>
                         </div>
                         <div class="small">
-                            <a href="/recuperar-senha.html"
+                            <a href="recuperar-senha.html"
                                 class="fw-medium text-primary text-decoration-none">Esqueceu sua senha?</a>
                         </div>
                     </div>
@@ -163,7 +171,7 @@
                 </div>
 
                 <div class="d-grid">
-                    <a href="/cadastro.html" class="btn btn-outline-secondary">
+                    <a href="cadastro.html" class="btn btn-outline-secondary">
                         Criar uma conta
                     </a>
                 </div>
@@ -173,13 +181,19 @@
                 </div>
 
             </div>
-
-            <div class="card-footer bg-light p-3">
-                <div class="text-center small text-muted">
+            
+            <div class="card-footer bg-light p-3 d-flex align-items-center justify-content-between">
+                
+                <a href="homepage.html" class="btn btn-link text-primary text-decoration-none small fw-medium p-0">
+                    <i data-feather="arrow-left" class="feather-sm-link"></i>
+                    Voltar para Home
+                </a>
+                
+                <div class="small text-muted">
                     <p class="mb-0">Versão 1.0.0</p>
                 </div>
             </div>
-        </div>
+            </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

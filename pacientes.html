@@ -59,12 +59,10 @@
         .table .btn-link { padding: 0.25rem; }
         .modal-body { max-height: 70vh; overflow-y: auto; }
         
-        /* ### ADIÇÃO DE CSS AQUI ### */
         .feather-sm { 
             width: 1rem; 
             height: 1rem; 
         }
-        /* ### FIM DA ADIÇÃO ### */
 
         @media (max-width: 768px) {
            .sidebar { width: 72px; }
@@ -87,6 +85,7 @@
                 </div>
                 <span class="logo-text fs-5 fw-bold text-dark">ClinicaPi</span>
             </div>
+            
             <nav class="nav nav-pills flex-column flex-grow-1">
                 <div class="nav-group mb-3">
                     <div class="nav-group-title">Geral</div>
@@ -103,25 +102,18 @@
                     </a>
                 </div>
                 <div class="nav-group mb-3">
-                    <div class="nav-group-title">Financeiro</div>
-                    <a class="nav-link d-flex align-items-center gap-2" href="financeiro.html">
-                        <i data-feather="dollar-sign" class="nav-icon"></i>
-                        <span>Financeiro</span>
-                    </a>
-                    <a class="nav-link d-flex align-items-center gap-2" href="notas-fiscais.html">
-                        <i data-feather="file-text" class="nav-icon"></i>
-                        <span>Notas Fiscais</span>
-                    </a>
-                </div>
-                <div class="nav-group mb-3">
                     <div class="nav-group-title">Administrativo</div>
                     <a class="nav-link d-flex align-items-center gap-2" href="prontuarios.html">
                         <i data-feather="clipboard" class="nav-icon"></i>
                         <span>Prontuários</span>
                     </a>
-                    <a class="nav-link d-flex align-items-center gap-2" href="relatorios.html">
-                        <i data-feather="pie-chart" class="nav-icon"></i>
-                        <span>Relatórios</span>
+                    <a class="nav-link d-flex align-items-center gap-2" href="funcionarios.html">
+                        <i data-feather="briefcase" class="nav-icon"></i>
+                        <span>Funcionários</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2" href="convenios.html">
+                        <i data-feather="credit-card" class="nav-icon"></i>
+                        <span>Convênios</span>
                     </a>
                     <a class="nav-link d-flex align-items-center gap-2" href="configuracoes.html">
                         <i data-feather="settings" class="nav-icon"></i>
@@ -129,7 +121,7 @@
                     </a>
                 </div>
             </nav>
-        </div>
+            </div>
         
         <div class="user-profile p-3 border-top dropup">
              <a href="#" class="d-flex align-items-center gap-2 text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;">
@@ -145,13 +137,13 @@
                 </div>
             </a>
             <ul class="dropdown-menu shadow-sm" style="font-size: 0.875rem; width: calc(100% - 1.5rem); margin-left: 0.75rem;">
-                <li><a class="dropdown-item d-flex align-items-center gap-2" href="#"><i data-feather="user" class="feather-sm"></i> Meu Perfil</a></li>
+                <li><a class="dropdown-item d-flex align-items-center gap-2" href="meu-perfil.html"><i data-feather="user" class="feather-sm"></i> Meu Perfil</a></li>
                 <li><a class="dropdown-item d-flex align-items-center gap-2" href="configuracoes.html"><i data-feather="settings" class="feather-sm"></i> Configurações</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item d-flex align-items-center gap-2 text-danger" href="login.html"><i data-feather="log-out" class="feather-sm"></i> Sair</a></li>
             </ul>
         </div>
-        </aside>
+    </aside>
 
     <div class="main-content-wrapper">
 
@@ -180,13 +172,13 @@
                         <i data-feather="chevron-down" class="text-secondary"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="font-size: 0.875rem;">
-                        <li><a class="dropdown-item d-flex align-items-center gap-2" href="#"><i data-feather="user" class="feather-sm"></i> Meu Perfil</a></li>
+                        <li><a class="dropdown-item d-flex align-items-center gap-2" href="meu-perfil.html"><i data-feather="user" class="feather-sm"></i> Meu Perfil</a></li>
                         <li><a class="dropdown-item d-flex align-items-center gap-2" href="configuracoes.html"><i data-feather="settings" class="feather-sm"></i> Configurações</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item d-flex align-items-center gap-2 text-danger" href="login.html"><i data-feather="log-out" class="feather-sm"></i> Sair</a></li>
                     </ul>
                 </div>
-                </div>
+            </div>
         </header>
 
         <main class="p-4">
@@ -254,7 +246,7 @@
                                 </td>
                                 <td class="px-4 py-3 text-end">
                                     <div class="d-flex gap-1 justify-content-end">
-                                        <a href="paciente-detalhe.html" class="btn btn-sm btn-link text-secondary p-1" title="Ver Prontuário">
+                                        <a href="paciente-detalhe.html" class="btn btn-sm btn-link text-secondary p-1" title="Detalhes do Paciente">
                                             <i data-feather="file-text"></i>
                                         </a>
                                         <button class="btn btn-sm btn-link text-primary p-1" title="Editar" data-bs-toggle="modal" data-bs-target="#pacienteModal" onclick="prepareEditModal()">
@@ -284,7 +276,7 @@
                                 </td>
                                 <td class="px-4 py-3 text-end">
                                     <div class="d-flex gap-1 justify-content-end">
-                                        <a href="paciente-detalhe.html" class="btn btn-sm btn-link text-secondary p-1" title="Ver Prontuário">
+                                        <a href="paciente-detalhe.html" class="btn btn-sm btn-link text-secondary p-1" title="Detalhes do Paciente">
                                             <i data-feather="file-text"></i>
                                         </a>
                                         <button class="btn btn-sm btn-link text-primary p-1" title="Editar" data-bs-toggle="modal" data-bs-target="#pacienteModal" onclick="prepareEditModal()">
@@ -319,40 +311,84 @@
                 </div>
                 <div class="modal-body p-4">
                     <form id="pacienteForm">
+                        <h5 class="h6 fw-medium text-dark mb-3">Dados Pessoais</h5>
                         <div class="row g-3 mb-3">
-                            <div class="col-md-6">
-                                <label for="nome" class="form-label small">Nome Completo</label>
-                                <input type="text" class="form-control form-control-sm" id="nome" placeholder="Ex: Carlos Ferreira" required>
+                            <div class="col-md-12">
+                                <label for="nome" class="form-label small">Nome do paciente</label>
+                                <input type="text" class="form-control form-control-sm" id="nome" placeholder="Nome completo" required>
                             </div>
-                            <div class="col-md-6">
-                                <label for="email" class="form-label small">E-mail</label>
-                                <input type="email" class="form-control form-control-sm" id="email" placeholder="Ex: carlos.f@email.com">
+                            <div class="col-md-4">
+                                <label for="data_nascimento" class="form-label small">Data de nascimento</label>
+                                <input type="date" class="form-control form-control-sm" id="data_nascimento">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="idade" class="form-label small">Idade</label>
+                                <input type="number" class="form-control form-control-sm" id="idade" placeholder="Ex: 30">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="sexo" class="form-label small">Sexo</label>
+                                <select id="sexo" class="form-select form-select-sm">
+                                    <option value="" selected>Selecione...</option>
+                                    <option value="Masculino">Masculino</option>
+                                    <option value="Feminino">Feminino</option>
+                                    <option value="Outro">Outro</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="row g-3 mb-3">
-                            <div class="col-md-4">
+                        
+                        <hr class="my-4">
+                        <h5 class="h6 fw-medium text-dark mb-3">Documentos e Contato</h5>
+                         <div class="row g-3 mb-3">
+                             <div class="col-md-4">
                                 <label for="cpf" class="form-label small">CPF</label>
                                 <input type="text" class="form-control form-control-sm" id="cpf" placeholder="000.000.000-00">
                             </div>
                             <div class="col-md-4">
-                                <label for="nascimento" class="form-label small">Data de Nascimento</label>
-                                <input type="date" class="form-control form-control-sm" id="nascimento">
+                                <label for="contato" class="form-label small">Contato (Telefone/Celular)</label>
+                                <input type="tel" class="form-control form-control-sm" id="contato" placeholder="(00) 00000-0000">
                             </div>
-                            <div class="col-md-4">
-                                <label for="telefone" class="form-label small">Telefone</label>
-                                <input type="tel" class="form-control form-control-sm" id="telefone" placeholder="(00) 00000-0000">
+                             <div class="col-md-4">
+                                <label for="email" class="form-label small">E-mail</label>
+                                <input type="email" class="form-control form-control-sm" id="email" placeholder="paciente@email.com">
                             </div>
                         </div>
+
                         <hr class="my-4">
-                        <h4 class="h6 fw-medium text-dark mb-3">Endereço</h4>
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label for="cep" class="form-label small">CEP</label>
-                                <input type="text" class="form-control form-control-sm" id="cep" placeholder="00000-000">
-                            </div>
-                            <div class="col-md-8">
+                        <h5 class="h6 fw-medium text-dark mb-3">Endereço</h5>
+                        <div class="row g-3 mb-3">
+                             <div class="col-md-8">
                                 <label for="rua" class="form-label small">Rua</label>
-                                <input type="text" class="form-control form-control-sm" id="rua">
+                                <input type="text" class="form-control form-control-sm" id="rua" placeholder="Ex: Av. Getúlio Vargas">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="complemento" class="form-label small">Complemento</label>
+                                <input type="text" class="form-control form-control-sm" id="complemento" placeholder="Ex: Apto 101">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="bairro" class="form-label small">Bairro</label>
+                                <input type="text" class="form-control form-control-sm" id="bairro">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="cidade" class="form-label small">Cidade</label>
+                                <input type="text" class="form-control form-control-sm" id="cidade">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="estado" class="form-label small">Estado</label>
+                                <input type="text" class="form-control form-control-sm" id="estado" placeholder="Ex: MG">
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        <h5 class="h6 fw-medium text-dark mb-3">Convênio</h5>
+                        <div class="row g-3">
+                             <div class="col-md-6">
+                                <label for="convenio" class="form-label small">Convênio</label>
+                                <select id="convenio" class="form-select form-select-sm">
+                                    <option value="Particular" selected>Particular</option>
+                                    <option value="SulAmérica">SulAmérica Saúde</option>
+                                    <option value="Bradesco">Bradesco Saúde</option>
+                                    <option value="Unimed">Unimed</option>
+                                </select>
                             </div>
                         </div>
                     </form>
@@ -364,7 +400,6 @@
             </div>
         </div>
     </div>
-
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm modal-dialog-centered">
             <div class="modal-content rounded-4 border-0 shadow-lg">
