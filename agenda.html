@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClinicaPi - Agenda (Bootstrap 5)</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
+
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bs-primary: #00A896;
+            --bs-primary-rgb: 0, 168, 150;
+            --bs-primary-dark-rgb: 0, 138, 121;
+            --bs-primary-bg-subtle: rgba(var(--bs-primary-rgb), 0.1);
+
+            --bs-secondary: #64748b;
+            --bs-secondary-rgb: 94, 96, 206;
+            --bs-secondary-bg-subtle: rgba(var(--bs-secondary-rgb), 0.1);
+
+            --bs-warning: #FF9E00;
+            /* accent */
+            --bs-warning-rgb: 255, 158, 0;
+            --bs-warning-bg-subtle: rgba(var(--bs-warning-rgb), 0.1);
+            --bs-warning-text-emphasis: #cc7e00;
+
+            --bs-danger: #f43f5e;
+            /* rose-500 */
+            --bs-danger-rgb: 244, 63, 94;
+            --bs-danger-bg-subtle: rgba(var(--bs-danger-rgb), 0.1);
+            --bs-danger-text-emphasis: #f43f5e;
+
+            --bs-dark: #1E293B;
+            --bs-light: #F8FAFC;
+            --bs-body-bg: var(--bs-light);
+            --bs-border-color: #e2e8f0;
+            --bs-border-color-translucent: rgba(var(--bs-dark-rgb), 0.1);
+            --bs-secondary-color: #64748B;
+            --bs-body-font-family: 'Inter', sans-serif;
+            --bs-border-radius-xl: 0.75rem;
+            --bs-border-radius-lg: 0.5rem;
+            --fc-border-color: var(--bs-border-color);
+            /* FullCalendar border color */
+            --fc-page-bg-color: var(--bs-white);
+            --fc-event-border-color: var(--bs-primary);
+            --fc-event-bg-color: var(--bs-primary);
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            font-size: 0.875rem;
+        }
+
+        .sidebar {
+            width: 260px;
+            min-width: 260px;
+            background-color: var(--bs-white);
+            border-right: 1px solid var(--bs-border-color);
+            transition: width 0.3s ease;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--bs-primary) 0%, #5E60CE 100%);
+        }
+
+        .sidebar .nav-link {
+            color: var(--bs-secondary-color);
+            font-weight: 500;
+            padding: 0.75rem;
+            border-radius: var(--bs-border-radius-lg);
+        }
+
+        .sidebar .nav-link .feather {
+            width: 20px;
+            height: 20px;
+            color: #94a3b8;
+        }
+
+        .sidebar .nav-link:hover {
+            background: #f1f5f9;
+            color: var(--bs-dark);
+        }
+
+        .sidebar .nav-link.active {
+            background: var(--bs-light);
+            color: var(--bs-primary);
+            font-weight: 600;
+        }
+
+        .sidebar .nav-link.active .feather {
+            color: var(--bs-primary);
+        }
+
+        .nav-group-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            padding: 0 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-profile .feather {
+            color: #94a3b8;
+        }
+
+        .header {
+            height: 64px;
+            background: white;
+            border-bottom: 1px solid var(--bs-border-color);
+        }
+
+        .search-input {
+            padding-left: 2.5rem;
+            font-size: 0.875rem;
+            border-color: var(--bs-border-color);
+            background-color: var(--bs-light);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--bs-primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            pointer-events: none;
+        }
+
+        .action-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: #64748b;
+            background: transparent;
+            transition: all 0.2s ease;
+            position: relative;
+            border: none;
+            padding: 0;
+        }
+
+        .action-button:hover {
+            background: #f1f5f9;
+            color: var(--bs-dark);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 16px;
+            height: 16px;
+            font-size: 0.625rem;
+            font-weight: 600;
+            background: var(--bs-danger);
+        }
+
+        .main-content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        main {
+            flex: 1;
+            overflow-y: auto;
+            background-color: var(--bs-light);
+        }
+
+        .btn-primary:hover {
+            background-color: rgba(var(--bs-primary-dark-rgb), 1);
+            border-color: rgba(var(--bs-primary-dark-rgb), 1);
+        }
+
+        .text-primary {
+            color: var(--bs-primary) !important;
+        }
+
+        .text-secondary {
+            color: var(--bs-secondary-color) !important;
+        }
+
+        .text-warning {
+            color: var(--bs-warning-text-emphasis) !important;
+        }
+
+        .text-danger {
+            color: var(--bs-danger-text-emphasis) !important;
+        }
+
+        .avatar-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        /* FullCalendar Customizations */
+        .fc {
+            height: 600px;
+            /* Altura do calendário */
+        }
+
+        .fc .fc-toolbar-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .fc .fc-button {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+            font-size: 0.875rem;
+        }
+
+        .fc .fc-button:hover,
+        .fc .fc-button-primary:not(:disabled):active {
+            background-color: rgba(var(--bs-primary-dark-rgb), 1);
+            border-color: rgba(var(--bs-primary-dark-rgb), 1);
+        }
+
+        .fc-theme-standard td,
+        .fc-theme-standard th {
+            border-color: var(--bs-border-color);
+        }
+
+        .fc .fc-daygrid-day-number,
+        .fc .fc-daygrid-day-number a {
+            color: #495057;
+            text-decoration: none;
+        }
+
+        .fc-daygrid-day-number,
+        .fc-daygrid-event,
+        .fc-col-header-cell-cushion {
+            color: #495057 !important;
+        }
+
+        /* ### CSS ADICIONADO: Horários Livres/Ocupados ### */
+        /* Cor dos slots de horário de trabalho (livres) */
+        .fc-timegrid-slot-lane:not(.fc-non-business) {
+            /* Deixamos branco (livre) */
+            background-color: #ffffff;
+        }
+
+        /* Cor dos slots fora do expediente (cinza) */
+        .fc-non-business {
+            background-color: #f5f5f5;
+            /* Um cinza bem claro */
+        }
+
+        .fc-event {
+            cursor: pointer;
+            /* Indica que o evento é clicável */
+        }
+
+        /* ### FIM DA ADIÇÃO ### */
+
+
+        /* Lista de Próximas Consultas */
+        .upcoming-appointment {
+            border-left: 4px solid var(--bs-border-color);
+            padding-left: 1rem;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .upcoming-appointment.border-primary {
+            border-left-color: var(--bs-primary);
+        }
+
+        .upcoming-appointment.border-secondary {
+            border-left-color: #5E60CE;
+        }
+
+        .upcoming-appointment.border-warning {
+            border-left-color: var(--bs-warning);
+        }
+
+        .upcoming-appointment.border-danger {
+            border-left-color: var(--bs-danger);
+        }
+
+        .feather-sm {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .modal-body {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--bs-primary);
+            box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.1);
+        }
+
+        .autocomplete-list {
+            position: absolute;
+            width: 100%;
+            z-index: 1060;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid var(--bs-border-color);
+            border-top: none;
+            border-radius: 0 0 var(--bs-border-radius-lg) var(--bs-border-radius-lg);
+        }
+
+        .autocomplete-list .list-group-item {
+            cursor: pointer;
+            border-radius: 0;
+        }
+
+        .autocomplete-list .list-group-item:last-child {
+            border-radius: 0 0 var(--bs-border-radius-lg) var(--bs-border-radius-lg);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 72px;
+            }
+
+            .sidebar .logo-text,
+            .sidebar .nav-group-title,
+            .sidebar .nav-link span,
+            .sidebar .user-info,
+            .sidebar .user-settings .feather {
+                display: none;
+            }
+
+            .sidebar .logo {
+                justify-content: center;
+                padding-bottom: 1.5rem;
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .sidebar .nav-link {
+                justify-content: center;
+            }
+
+            .sidebar .user-profile {
+                justify-content: center;
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .header .search-bar-wrapper {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar d-flex flex-column vh-100">
+        <div class="d-flex flex-column flex-grow-1 p-3">
+            <div class="logo d-flex align-items-center gap-2 pb-3 mb-3 border-bottom">
+                <div class="logo-icon d-flex align-items-center justify-content-center text-white">
+                    <i data-feather="activity" style="width: 18px; height: 18px;"></i>
+                </div>
+                <span class="logo-text fs-5 fw-bold text-dark">ClinicaPi</span>
+            </div>
+            <nav class="nav nav-pills flex-column flex-grow-1">
+                <div class="nav-group mb-3">
+                    <div class="nav-group-title">Geral</div>
+                    <a class="nav-link d-flex align-items-center gap-2" href="dashboard.html">
+                        <i data-feather="home" class="nav-icon"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2 active" href="agenda.html">
+                        <i data-feather="calendar" class="nav-icon"></i>
+                        <span>Agenda</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2" href="pacientes.html">
+                        <i data-feather="users" class="nav-icon"></i>
+                        <span>Pacientes</span>
+                    </a>
+                </div>
+                <div class="nav-group mb-3">
+                    <div class="nav-group-title">Administrativo</div>
+                    <a class="nav-link d-flex align-items-center gap-2" href="prontuarios.html">
+                        <i data-feather="clipboard" class="nav-icon"></i>
+                        <span>Prontuários</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2" href="funcionarios.html">
+                        <i data-feather="briefcase" class="nav-icon"></i>
+                        <span>Funcionários</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2" href="convenios.html">
+                        <i data-feather="credit-card" class="nav-icon"></i>
+                        <span>Convênios</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2" href="configuracoes.html">
+                        <i data-feather="settings" class="nav-icon"></i>
+                        <span>Configurações</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+        <div class="user-profile p-3 border-top dropup">
+            <a href="#" class="d-flex align-items-center gap-2 text-decoration-none" data-bs-toggle="dropdown"
+                aria-expanded="false" style="cursor:pointer;">
+                <div class="user-avatar rounded-circle bg-primary-subtle d-flex align-items-center justify-content-center text-primary"
+                    style="width: 36px; height: 36px;">
+                    <i data-feather="user"></i>
+                </div>
+                <div class="user-info flex-grow-1 lh-sm">
+                    <div class="user-name fw-medium small text-dark">Dr. Silva</div>
+                    <div class="user-role small text-muted">Médico</div>
+                </div>
+                <div class="user-settings">
+                    <i data-feather="chevron-down"></i>
+                </div>
+            </a>
+            <ul class="dropdown-menu shadow-sm"
+                style="font-size: 0.875rem; width: calc(100% - 1.5rem); margin-left: 0.75rem;">
+                <li><a class="dropdown-item d-flex align-items-center gap-2" href="meu-perfil.html"><i
+                            data-feather="user" class="feather-sm"></i> Meu Perfil</a></li>
+                <li><a class="dropdown-item d-flex align-items-center gap-2" href="configuracoes.html"><i
+                            data-feather="settings" class="feather-sm"></i> Configurações</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item d-flex align-items-center gap-2 text-danger" href="login.html"><i
+                            data-feather="log-out" class="feather-sm"></i> Sair</a></li>
+            </ul>
+        </div>
+    </aside>
+
+    <div class="main-content-wrapper">
+
+        <header class="header d-flex align-items-center px-4">
+            <div class="search-bar-wrapper flex-grow-1 mx-md-4" style="max-width: 500px;">
+                <div class="input-group input-group-sm position-relative">
+                    <span class="search-icon"><i data-feather="search"></i></span>
+                    <input type="text" class="form-control search-input" placeholder="Pesquisar...">
+                </div>
+            </div>
+            <div class="header-actions ms-auto d-flex align-items-center gap-2">
+                <button class="action-button">
+                    <i data-feather="bell"></i>
+                    <span class="notification-badge badge rounded-pill">3</span>
+                </button>
+                <button class="action-button">
+                    <i data-feather="message-square"></i>
+                    <span class="notification-badge badge rounded-pill">1</span>
+                </button>
+                <div class="user-menu dropdown">
+                    <a href="#" class="d-flex align-items-center gap-2 text-decoration-none" data-bs-toggle="dropdown"
+                        aria-expanded="false" style="cursor: pointer;">
+                        <div class="user-avatar rounded-circle bg-primary-subtle d-flex align-items-center justify-content-center text-primary"
+                            style="width: 36px; height: 36px;">
+                            <i data-feather="user"></i>
+                        </div>
+                        <i data-feather="chevron-down" class="text-secondary"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="font-size: 0.875rem;">
+                        <li><a class="dropdown-item d-flex align-items-center gap-2" href="meu-perfil.html"><i
+                                    data-feather="user" class="feather-sm"></i> Meu Perfil</a></li>
+                        <li><a class="dropdown-item d-flex align-items-center gap-2" href="configuracoes.html"><i
+                                    data-feather="settings" class="feather-sm"></i> Configurações</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item d-flex align-items-center gap-2 text-danger" href="login.html"><i
+                                    data-feather="log-out" class="feather-sm"></i> Sair</a></li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+
+        <main class="p-4">
+            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between mb-4">
+                <div>
+                    <h1 class="h3 fw-bold text-dark mb-1">Agenda Médica</h1>
+                    <p class="text-secondary mb-0">Visualize e gerencie suas consultas</p>
+                </div>
+                <div class="mt-3 mt-md-0 d-flex gap-2">
+                    <button class="btn btn-outline-secondary d-inline-flex align-items-center gap-2">
+                        <i data-feather="filter" style="width: 1em; height: 1em;"></i> Filtros
+                    </button>
+                    <button class="btn btn-primary d-inline-flex align-items-center gap-2" data-bs-toggle="modal"
+                        data-bs-target="#consultaModal" id="btn-nova-consulta">
+                        <i data-feather="plus" style="width: 1em; height: 1em;"></i> Nova Consulta
+                    </button>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 rounded-4 mb-4">
+                <div class="card-body p-3 d-flex align-items-center gap-3">
+                    <label for="medicoFiltro" class="form-label small mb-0 fw-medium text-dark">Filtrar por
+                        Profissional:</label>
+                    <select id="medicoFiltro" class="form-select form-select-sm" style="width: auto;">
+                        <option value="todos" selected>Todos os Profissionais</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm border-0 rounded-4 h-100">
+                        <div class="card-body p-4">
+                            <div id="calendar"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card shadow-sm border-0 rounded-4 h-100">
+                        <div class="card-body p-4 d-flex flex-column">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <h3 class="h5 fw-bold text-dark mb-0">Próximas Consultas</h3>
+                                <div class="d-flex align-items-center gap-1">
+                                    <button class="btn btn-sm btn-link text-secondary p-1">
+                                        <i data-feather="chevron-left"></i>
+                                    </button>
+                                    <span class="small fw-medium">Hoje</span>
+                                    <button class="btn btn-sm btn-link text-secondary p-1">
+                                        <i data-feather="chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-column gap-3 flex-grow-1 overflow-auto" style="max-height: 540px;">
+                                <div class="upcoming-appointment border-primary">
+                                    <h4 class="fw-medium text-dark mb-0 small">08:30 - 09:00</h4>
+                                    <p class="small text-secondary mb-1">João Santos • Consulta de retorno</p>
+                                    <div class="d-flex gap-2">
+                                        <span
+                                            class="badge rounded-pill text-bg-light text-primary border border-primary-subtle fw-medium">Confirmado</span>
+                                        <span class="badge rounded-pill text-bg-light fw-medium">Cardiologia</span>
+                                    </div>
+                                </div>
+                                <div class="upcoming-appointment border-warning">
+                                    <h4 class="fw-medium text-dark mb-0 small">10:15 - 11:00</h4>
+                                    <p class="small text-secondary mb-1">Maria Oliveira • Primeira consulta</p>
+                                    <div class="d-flex gap-2">
+                                        <span
+                                            class="badge rounded-pill text-bg-light text-warning border border-warning-subtle fw-medium">Aguardando</span>
+                                        <span class="badge rounded-pill text-bg-light fw-medium">Clínico Geral</span>
+                                    </div>
+                                </div>
+                                <div class="upcoming-appointment border-secondary">
+                                    <h4 class="fw-medium text-dark mb-0 small">14:00 - 14:30</h4>
+                                    <p class="small text-secondary mb-1">Carlos Ferreira • Acompanhamento</p>
+                                    <div class="d-flex gap-2">
+                                        <span
+                                            class="badge rounded-pill text-bg-light text-secondary border border-secondary-subtle fw-medium">Confirmado</span>
+                                        <span class="badge rounded-pill text-bg-light fw-medium">Ortopedia</span>
+                                    </div>
+                                </div>
+                                <div class="upcoming-appointment border-danger">
+                                    <h4 class="fw-medium text-dark mb-0 small">16:45 - 17:30</h4>
+                                    <p class="small text-secondary mb-1">Ana Souza • Exame</p>
+                                    <div class="d-flex gap-2">
+                                        <span
+                                            class="badge rounded-pill text-bg-light text-danger border border-danger-subtle fw-medium">Cancelado</span>
+                                        <span class="badge rounded-pill text-bg-light fw-medium">Pediatria</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h3 class="h5 fw-bold text-dark mb-0">Pacientes da Próxima Hora</h3>
+                        <a href="pacientes.html" class="btn btn-link btn-sm text-primary p-0 text-decoration-none">Ver
+                            todos</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr class="text-start text-secondary small">
+                                    <th class="fw-medium pb-3 ps-3">Paciente</th>
+                                    <th class="fw-medium pb-3">Horário</th>
+                                    <th class="fw-medium pb-3">Tipo</th>
+                                    <th class="fw-medium pb-3">Status</th>
+                                    <th class="fw-medium pb-3">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="ps-3">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="avatar-icon bg-primary-subtle text-primary">
+                                                <i data-feather="user"></i>
+                                            </div>
+                                            <span class="fw-medium small">João Santos</span>
+                                        </div>
+                                    </td>
+                                    <td class="small">08:30</td>
+                                    <td class="small">Consulta de retorno</td>
+                                    <td>
+                                        <span
+                                            class="badge rounded-pill text-bg-light text-primary border border-primary-subtle fw-medium">Confirmado</span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex gap-1">
+                                            <a href="prontuarios.html" class="btn btn-sm btn-link text-primary p-1"
+                                                title="Ver Prontuário">
+                                                <i data-feather="file-text"></i>
+                                            </a>
+                                            <button class="btn btn-sm btn-link text-secondary p-1"
+                                                title="Iniciar Consulta">
+                                                <i data-feather="play-circle"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal fade" id="consultaModal" tabindex="-1" aria-labelledby="consultaModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-header border-bottom p-4">
+                    <h1 class="modal-title fs-5 fw-bold text-dark" id="consultaModalLabel">Nova Consulta</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="consultaForm">
+
+                        <input type="hidden" id="consultaEventId">
+
+                        <h5 class="h6 fw-medium text-dark mb-3">Dados do Paciente</h5>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-8 position-relative">
+                                <label for="pacienteNome" class="form-label small">Paciente (Nome ou CPF)</label>
+                                <input type="text" class="form-control form-control-sm" id="pacienteNome"
+                                    placeholder="Digite para buscar paciente..." required autocomplete="off">
+                                <div class="list-group autocomplete-list d-none" id="pacienteSuggestions">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="pacienteContato" class="form-label small">Nº de Contato</label>
+                                <input type="tel" class="form-control form-control-sm" id="pacienteContato"
+                                    placeholder="(00) 00000-0000" readonly>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+                        <h5 class="h6 fw-medium text-dark mb-3">Dados da Consulta</h5>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-5">
+                                <label for="especialidadeSelect" class="form-label small">Especialidade</label>
+                                <select id="especialidadeSelect" class="form-select form-select-sm" required>
+                                    <option value="todas" selected>Todas as especialidades</option>
+                                </select>
+                            </div>
+                            <div class="col-md-7">
+                                <label for="medicoSelect" class="form-label small">Médico</label>
+                                <select id="medicoSelect" class="form-select form-select-sm" required disabled>
+                                    <option value="" selected>Selecione uma especialidade primeiro</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="dataConsulta" class="form-label small">Dia da Consulta</label>
+                                <input type="date" class="form-control form-control-sm" id="dataConsulta" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="horaConsulta" class="form-label small">Hora da Consulta</label>
+                                <input type="time" class="form-control form-control-sm" id="horaConsulta" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="tipoConsulta" class="form-label small">Tipo da Consulta</label>
+                                <select id="tipoConsulta" class="form-select form-select-sm" required>
+                                    <option value="Primeira vez">Primeira vez</option>
+                                    <option value="Retorno">Retorno</option>
+                                    <option value="Exame">Exame</option>
+                                    <option value="Outro">Outro</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="statusConsulta" class="form-label small">Status</label>
+                                <select id="statusConsulta" class="form-select form-select-sm" required>
+                                    <option value="Ativa" selected>Ativa</option>
+                                    <option value="Concluída">Concluída</option>
+                                    <option value="Cancelada">Cancelada</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="sintomas" class="form-label small">Sintomas / Queixa Principal</label>
+                            <textarea id="sintomas" class="form-control form-control-sm" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="observacoes" class="form-label small">Observações Adicionais (Opcional)</label>
+                            <textarea id="observacoes" class="form-control form-control-sm" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer bg-light border-top p-3 d-flex justify-content-end gap-2"
+                    id="createModalFooter">
+                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                        data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" form="consultaForm" class="btn btn-sm btn-primary">Salvar Consulta</button>
+                </div>
+
+                <div class="modal-footer bg-light border-top p-3 d-flex justify-content-between d-none"
+                    id="editModalFooter">
+                    <button type="button" class="btn btn-sm btn-outline-danger" id="btnExcluirConsulta">
+                        <i data-feather="trash-2" class="feather-sm me-1"></i>
+                        Excluir
+                    </button>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary"
+                            data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" form="consultaForm" class="btn btn-sm btn-primary">Salvar
+                            Alterações</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/pt-br.min.js"></script>
+
+
+    <script>
+        // Inicializa Feather Icons
+        feather.replace();
+
+        // Variável global para o calendário
+        let calendar;
+
+        // ### SCRIPTS DO MODAL E AUTOCOMPLETE ###
+        const consultaModalElement = document.getElementById('consultaModal');
+        const consultaModal = new bootstrap.Modal(consultaModalElement);
+        const consultaForm = document.getElementById('consultaForm');
+
+        // Seletores dos elementos do modal
+        const modalTitle = document.getElementById('consultaModalLabel');
+        const createModalFooter = document.getElementById('createModalFooter');
+        const editModalFooter = document.getElementById('editModalFooter');
+        const btnExcluirConsulta = document.getElementById('btnExcluirConsulta');
+        const consultaEventIdInput = document.getElementById('consultaEventId');
+
+        const pacienteInput = document.getElementById('pacienteNome');
+        const pacienteSuggestions = document.getElementById('pacienteSuggestions');
+        const contatoInput = document.getElementById('pacienteContato');
+        const especialidadeSelect = document.getElementById('especialidadeSelect');
+        const medicoSelect = document.getElementById('medicoSelect');
+
+        // 1. Dados Simulados
+        const pacientesDB = [
+            { id: 1, nome: 'Carlos Ferreira', cpf: '123.456.789-00', contato: '(34) 99999-9999' },
+            { id: 2, nome: 'Ana Souza', cpf: '987.654.321-00', contato: '(34) 98888-8888' },
+            { id: 3, nome: 'João Santos', cpf: '111.222.333-44', contato: '(11) 97777-7777' },
+            { id: 4, nome: 'Maria Oliveira', cpf: '444.555.666-77', contato: '(21) 96666-6666' }
+        ];
+        const medicosDB = [
+            { id: 1, nome: 'Dr. Silva', especialidade: 'Clínico Geral' },
+            { id: 2, nome: 'Dra. Maria Oliveira', especialidade: 'Cardiologista' },
+            { id: 3, nome: 'Dr. Roberto Almeida', especialidade: 'Ortopedista' },
+            { id: 4, nome: 'Dr. Ricardo Borges', especialidade: 'Cardiologista' },
+            { id: 5, nome: 'Dra. Roberta Nunes', especialidade: 'Clínico Geral' },
+            { id: 6, nome: 'Dr. Rogério Costa', especialidade: 'Ortopedista' }
+        ];
+
+        // 2. Preenche Especialidades Dinamicamente
+        function popularEspecialidades() {
+            const especialidades = [...new Set(medicosDB.map(m => m.especialidade))];
+            especialidadeSelect.innerHTML = '<option value="todas" selected>Todas as especialidades</option>';
+            especialidades.sort().forEach(esp => {
+                const option = document.createElement('option');
+                option.value = esp;
+                option.textContent = esp;
+                especialidadeSelect.appendChild(option);
+            });
+        }
+
+        // 3. Popula Médicos Filtrados
+        function popularMedicosFiltrados() {
+            const especialidadeSelecionada = especialidadeSelect.value;
+            medicoSelect.innerHTML = '';
+
+            let medicosFiltrados = (especialidadeSelecionada === 'todas') ? medicosDB : medicosDB.filter(m => m.especialidade === especialidadeSelecionada);
+
+            if (medicosFiltrados.length > 0) {
+                medicoSelect.disabled = false;
+                medicoSelect.innerHTML = '<option value="" selected disabled>Selecione um médico...</option>';
+                medicosFiltrados.forEach(medico => {
+                    const option = document.createElement('option');
+                    option.value = medico.nome;
+                    option.textContent = `${medico.nome} (${medico.especialidade})`;
+                    medicoSelect.appendChild(option);
+                });
+            } else {
+                medicoSelect.disabled = true;
+                medicoSelect.innerHTML = '<option value="" selected>Nenhum médico encontrado</option>';
+            }
+        }
+
+        // 4. Ouve a mudança na Especialidade
+        especialidadeSelect.addEventListener('change', popularMedicosFiltrados);
+
+        // 5. Autocomplete para Paciente
+        pacienteInput.addEventListener('input', (e) => {
+            const valor = e.target.value.toLowerCase();
+            pacienteSuggestions.innerHTML = '';
+            if (valor.length === 0) {
+                pacienteSuggestions.classList.add('d-none');
+                contatoInput.value = '';
+                return;
+            }
+            const filtrados = pacientesDB.filter(p => p.nome.toLowerCase().includes(valor) || p.cpf.includes(valor));
+
+            if (filtrados.length > 0) {
+                pacienteSuggestions.classList.remove('d-none');
+                filtrados.forEach(paciente => {
+                    const item = document.createElement('a');
+                    item.href = "#";
+                    item.className = 'list-group-item list-group-item-action small';
+                    item.innerHTML = `${paciente.nome} <span class="text-muted">(${paciente.cpf})</span>`;
+                    item.addEventListener('click', (evt) => {
+                        evt.preventDefault();
+                        pacienteInput.value = paciente.nome;
+                        contatoInput.value = paciente.contato;
+                        pacienteSuggestions.classList.add('d-none');
+                    });
+                    pacienteSuggestions.appendChild(item);
+                });
+            } else {
+                pacienteSuggestions.classList.add('d-none');
+            }
+        });
+
+        // 6. Fechar lista de Pacientes ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#pacienteNome')) {
+                pacienteSuggestions.classList.add('d-none');
+            }
+        });
+
+        // 7. Lógica de SALVAR (Criação e Atualização)
+        consultaForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const data = document.getElementById('dataConsulta').value;
+            const hora = document.getElementById('horaConsulta').value;
+            const inicioNovaConsulta = new Date(`${data}T${hora}:00`);
+            const fimNovaConsulta = new Date(inicioNovaConsulta.getTime() + 30 * 60000); // Simula 30 min
+            const eventId = consultaEventIdInput.value; // Pega o ID (se for edição)
+
+            let conflito = false;
+            const eventosAtuais = calendar.getEvents();
+
+            for (const evento of eventosAtuais) {
+                if (evento.id === eventId) continue; // Ignora o próprio evento
+
+                if (inicioNovaConsulta < evento.end && fimNovaConsulta > evento.start) {
+                    conflito = true;
+                    break;
+                }
+            }
+
+            if (conflito) {
+                alert('Erro: Horário indisponível! Já existe outra consulta agendada para este período.');
+                return;
+            }
+
+            // Pega dados do form
+            const nomePaciente = document.getElementById('pacienteNome').value;
+            const nomeMedico = document.getElementById('medicoSelect').value;
+            const status = document.getElementById('statusConsulta').value;
+
+            // Prepara o objeto do evento
+            const dadosEvento = {
+                title: `${nomePaciente} - ${nomeMedico}`,
+                start: inicioNovaConsulta,
+                end: fimNovaConsulta,
+                color: (status === 'Cancelada') ? 'var(--bs-danger)' : (status === 'Concluída' ? 'var(--bs-secondary-color)' : 'var(--bs-primary)'),
+                extendedProps: {
+                    paciente: nomePaciente,
+                    contato: document.getElementById('pacienteContato').value,
+                    especialidade: document.getElementById('especialidadeSelect').value,
+                    medico: nomeMedico,
+                    tipo: document.getElementById('tipoConsulta').value,
+                    status: status,
+                    sintomas: document.getElementById('sintomas').value,
+                    observacoes: document.getElementById('observacoes').value
+                }
+            };
+
+            if (eventId) {
+                // ### ATUALIZAR (UPDATE) ###
+                let eventToUpdate = calendar.getEventById(eventId);
+                eventToUpdate.setProp('title', dadosEvento.title);
+                eventToUpdate.setStart(dadosEvento.start);
+                eventToUpdate.setEnd(dadosEvento.end);
+                eventToUpdate.setExtendedProps(dadosEvento.extendedProps);
+                eventToUpdate.setProp('color', dadosEvento.color);
+                console.log('Consulta ATUALIZADA');
+            } else {
+                // ### CRIAR (CREATE) ###
+                calendar.addEvent({
+                    id: new Date().getTime().toString(), // Adiciona um ID único
+                    ...dadosEvento
+                });
+                console.log('Consulta SALVA');
+            }
+
+            consultaModal.hide();
+            consultaForm.reset();
+        });
+
+        // 8. Lógica de EXCLUIR
+        btnExcluirConsulta.addEventListener('click', function () {
+            const eventId = consultaEventIdInput.value;
+            if (!eventId) return;
+
+            if (confirm('Tem certeza que deseja excluir esta consulta?\nEsta ação não pode ser desfeita.')) {
+                let eventToDelete = calendar.getEventById(eventId);
+                if (eventToDelete) {
+                    eventToDelete.remove();
+                    console.log('Consulta EXCLUÍDA');
+                    consultaModal.hide();
+                }
+            }
+        });
+
+        // 9. Prepara o modal de CRIAÇÃO ao clicar no botão "+ Nova Consulta"
+        document.getElementById('btn-nova-consulta').addEventListener('click', () => {
+            consultaForm.reset();
+            modalTitle.textContent = 'Nova Consulta';
+            consultaEventIdInput.value = ''; // Limpa o ID
+
+            // Reseta os botões
+            createModalFooter.classList.remove('d-none');
+            editModalFooter.classList.add('d-none');
+
+            // Popula os selects
+            popularEspecialidades();
+            popularMedicosFiltrados();
+            medicoSelect.disabled = true; // Desabilita até selecionar especialidade
+        });
+
+
+        // Inicializa FullCalendar e Filtros da Página
+        document.addEventListener('DOMContentLoaded', function () {
+            // Adiciona ícones aos dropdowns de logout
+            document.querySelectorAll('button .feather, a .feather').forEach(icon => {
+                if (icon.closest('.btn-sm, .p-1, .px-2.py-1, .dropdown-item')) {
+                    icon.style.width = '1rem'; icon.style.height = '1rem';
+                }
+            });
+
+            // Popula o filtro de médico principal da página
+            const medicoFiltroSelect = document.getElementById('medicoFiltro');
+            const nomesMedicos = [...new Set(medicosDB.map(m => m.nome))];
+            nomesMedicos.sort().forEach(nome => {
+                const option = document.createElement('option');
+                option.value = nome;
+                option.textContent = nome;
+                medicoFiltroSelect.appendChild(option);
+            });
+
+            const calendarEl = document.getElementById('calendar');
+            if (calendarEl) {
+                calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'timeGridWeek',
+                    headerToolbar: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                    },
+                    locale: 'pt-br',
+                    buttonText: {
+                        today: 'Hoje', month: 'Mês', week: 'Semana', day: 'Dia', list: 'Lista'
+                    },
+                    allDaySlot: false,
+                    slotMinTime: "07:00:00",
+                    slotMaxTime: "20:00:00",
+                    contentHeight: 'auto',
+                    nowIndicator: true,
+                    selectable: true,
+                    editable: true, // Permite arrastar
+
+                    // ### MELHORIA: HORÁRIOS DE TRABALHO (Fica branco/cinza) ###
+                    businessHours: [
+                        { // Segunda a Sexta, Manhã
+                            daysOfWeek: [1, 2, 3, 4, 5],
+                            startTime: '08:00',
+                            endTime: '12:00'
+                        },
+                        { // Segunda a Sexta, Tarde
+                            daysOfWeek: [1, 2, 3, 4, 5],
+                            startTime: '14:00',
+                            endTime: '18:00'
+                        }
+                    ],
+
+                    // ### dateClick (CRIAR) ###
+                    dateClick: function (info) {
+                        consultaForm.reset();
+
+                        const dataClicada = info.date;
+                        const dataISO = dataClicada.toISOString().split('T')[0];
+                        const horaISO = dataClicada.toTimeString().split(' ')[0].substring(0, 5);
+
+                        document.getElementById('dataConsulta').value = dataISO;
+                        document.getElementById('horaConsulta').value = horaISO;
+
+                        modalTitle.textContent = 'Nova Consulta';
+                        consultaEventIdInput.value = '';
+                        createModalFooter.classList.remove('d-none');
+                        editModalFooter.classList.add('d-none');
+
+                        popularEspecialidades();
+                        popularMedicosFiltrados();
+                        medicoSelect.disabled = true;
+
+                        consultaModal.show();
+                    },
+
+                    // ### eventClick (LER / ATUALIZAR) ###
+                    eventClick: function (info) {
+                        info.jsEvent.preventDefault();
+
+                        consultaForm.reset();
+                        modalTitle.textContent = 'Editar Consulta';
+                        consultaEventIdInput.value = info.event.id;
+
+                        const props = info.event.extendedProps;
+                        const dataISO = info.event.start.toISOString().split('T')[0];
+                        const horaISO = info.event.start.toTimeString().split(' ')[0].substring(0, 5);
+
+                        // Preenche o formulário
+                        document.getElementById('pacienteNome').value = props.paciente || '';
+                        document.getElementById('pacienteContato').value = props.contato || '';
+                        document.getElementById('dataConsulta').value = dataISO;
+                        document.getElementById('horaConsulta').value = horaISO;
+                        document.getElementById('tipoConsulta').value = props.tipo || 'Retorno';
+                        document.getElementById('statusConsulta').value = props.status || 'Ativa';
+                        document.getElementById('sintomas').value = props.sintomas || '';
+                        document.getElementById('observacoes').value = props.observacoes || '';
+
+                        popularEspecialidades();
+                        especialidadeSelect.value = props.especialidade || 'todas';
+                        popularMedicosFiltrados();
+                        medicoSelect.value = props.medico || '';
+
+                        createModalFooter.classList.add('d-none');
+                        editModalFooter.classList.remove('d-none');
+                        feather.replace(); // Renderiza o ícone de lixeira
+
+                        consultaModal.show();
+                    },
+
+                    // Eventos de exemplo com IDs e extendedProps
+                    events: [
+                        {
+                            id: 'evt1', title: 'João S. - Retorno',
+                            start: '2025-11-05T08:30:00', end: '2025-11-05T09:00:00',
+                            color: 'var(--bs-primary)',
+                            extendedProps: {
+                                paciente: 'João Santos', contato: '(11) 97777-7777', especialidade: 'Cardiologista', medico: 'Dra. Maria Oliveira',
+                                tipo: 'Retorno', status: 'Ativa', sintomas: 'Acompanhamento pós-medicação.', observacoes: ''
+                            }
+                        },
+                        {
+                            id: 'evt2', title: 'Maria O. - Primeira consulta',
+                            start: '2025-11-06T10:15:00', end: '2025-11-06T11:00:00',
+                            color: 'var(--bs-warning)',
+                            extendedProps: {
+                                paciente: 'Maria Oliveira', contato: '(21) 96666-6666', especialidade: 'Clínico Geral', medico: 'Dr. Silva',
+                                tipo: 'Primeira vez', status: 'Ativa', sintomas: 'Dor de cabeça e tontura.', observacoes: 'Verificar pressão.'
+                            }
+                        },
+                        {
+                            id: 'evt3', title: 'Carlos F. - Acompanhamento',
+                            start: '2025-11-06T14:00:00', end: '2025-11-06T14:30:00',
+                            color: 'var(--bs-secondary-color)',
+                            extendedProps: {
+                                paciente: 'Carlos Ferreira', contato: '(34) 99999-9999', especialidade: 'Ortopedista', medico: 'Dr. Roberto Almeida',
+                                tipo: 'Retorno', status: 'Concluída', sintomas: 'Pós-operatório joelho.', observacoes: 'Paciente recuperando bem.'
+                            }
+                        },
+                        {
+                            id: 'evt4', title: 'Ana S. - Exame (Cancelado)',
+                            start: '2025-11-04T16:45:00', end: '2025-11-04T17:30:00',
+                            color: 'var(--bs-danger)', classNames: ['fc-event-canceled'],
+                            extendedProps: {
+                                paciente: 'Ana Souza', contato: '(34) 98888-8888', especialidade: 'Clínico Geral', medico: 'Dra. Roberta Nunes',
+                                tipo: 'Exame', status: 'Cancelada', sintomas: '', observacoes: 'Paciente ligou e cancelou.'
+                            }
+                        }
+                    ]
+                });
+                calendar.render();
+
+                // ### LÓGICA DO FILTRO DE MÉDICO DA PÁGINA ###
+                medicoFiltroSelect.addEventListener('change', () => {
+                    const medicoSelecionado = medicoFiltroSelect.value;
+                    const todosEventos = calendar.getEvents();
+
+                    todosEventos.forEach(evento => {
+                        if (medicoSelecionado === 'todos') {
+                            evento.setProp('display', 'auto'); // Mostra todos
+                        } else {
+                            if (evento.extendedProps.medico !== medicoSelecionado) {
+                                evento.setProp('display', 'none'); // Esconde
+                            } else {
+                                evento.setProp('display', 'auto'); // Mostra
+                            }
+                        }
+                    });
+                });
+
+            } else {
+                console.error("Elemento #calendar não encontrado.");
+            }
+        });
+    </script>
+</body>
+
+</html>
