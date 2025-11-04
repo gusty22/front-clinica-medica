@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClinicaPi - Funcionários (Bootstrap 5)</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bs-primary: #00A896;
+            --bs-primary-rgb: 0, 168, 150;
+            --bs-primary-dark-rgb: 0, 138, 121;
+            /* Calculado para hover */
+            --bs-primary-bg-subtle: rgba(var(--bs-primary-rgb), 0.1);
+
+            --bs-secondary: #5E60CE;
+            --bs-secondary-rgb: 94, 96, 206;
+            --bs-secondary-bg-subtle: rgba(var(--bs-secondary-rgb), 0.1);
+
+            --bs-warning: #FF9E00;
+            /* accent */
+            --bs-warning-rgb: 255, 158, 0;
+            --bs-warning-bg-subtle: rgba(var(--bs-warning-rgb), 0.1);
+            --bs-warning-text-emphasis: #cc7e00;
+
+            --bs-danger: #f43f5e;
+            /* rose-500 */
+            --bs-danger-rgb: 244, 63, 94;
+            --bs-danger-bg-subtle: rgba(var(--bs-danger-rgb), 0.1);
+            --bs-danger-text-emphasis: #f43f5e;
+
+            --bs-dark: #1E293B;
+            --bs-light: #F8FAFC;
+            --bs-body-bg: var(--bs-light);
+            --bs-border-color: #e2e8f0;
+            /* Cor da borda original */
+            --bs-border-color-translucent: rgba(var(--bs-dark-rgb), 0.1);
+            /* Bordas mais suaves */
+            --bs-secondary-color: #64748B;
+            /* Cor cinza texto */
+            --bs-body-font-family: 'Inter', sans-serif;
+            --bs-border-radius-xl: 0.75rem;
+            /* rounded-xl */
+            --bs-border-radius-lg: 0.5rem;
+            /* rounded-lg */
+        }
+
+        /* Layout Principal */
+        body {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            font-size: 0.875rem;
+            /* Equivalente a text-sm Tailwind */
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            min-width: 260px;
+            background-color: var(--bs-white);
+            border-right: 1px solid var(--bs-border-color);
+            transition: width 0.3s ease;
+        }
+
+        /* Estilo do ícone do logo */
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-secondary) 100%);
+        }
+
+        /* Ajustes nos links da Sidebar */
+        .sidebar .nav-link {
+            color: var(--bs-secondary-color);
+            font-weight: 500;
+            padding: 0.75rem;
+            /* Equivalente ao padding original */
+            border-radius: var(--bs-border-radius-lg);
+        }
+
+        .sidebar .nav-link .feather {
+            width: 20px;
+            height: 20px;
+            color: #94a3b8;
+            /* Cinza para ícones inativos */
+        }
+
+        .sidebar .nav-link:hover {
+            background: #f1f5f9;
+            /* cinza claro hover */
+            color: var(--bs-dark);
+        }
+
+        .sidebar .nav-link.active {
+            background: var(--bs-light);
+            color: var(--bs-primary);
+            font-weight: 600;
+        }
+
+        .sidebar .nav-link.active .feather {
+            color: var(--bs-primary);
+        }
+
+        .nav-group-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            padding: 0 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-profile .feather {
+            color: #94a3b8;
+        }
+
+        /* Header */
+        .header {
+            height: 64px;
+            background: white;
+            border-bottom: 1px solid var(--bs-border-color);
+        }
+
+        .search-input {
+            padding-left: 2.5rem;
+            /* Espaço para o ícone */
+            font-size: 0.875rem;
+            border-color: var(--bs-border-color);
+            background-color: var(--bs-light);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--bs-primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            pointer-events: none;
+        }
+
+        .action-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: #64748b;
+            background: transparent;
+            transition: all 0.2s ease;
+            position: relative;
+            border: none;
+            padding: 0;
+        }
+
+        .action-button:hover {
+            background: #f1f5f9;
+            color: var(--bs-dark);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 16px;
+            height: 16px;
+            font-size: 0.625rem;
+            font-weight: 600;
+            background: var(--bs-danger);
+        }
+
+        /* Conteúdo Principal */
+        .main-content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        main {
+            flex: 1;
+            overflow-y: auto;
+            background-color: var(--bs-light);
+        }
+
+        /* Cor do texto para bg-subtle */
+        .text-primary {
+            color: var(--bs-primary) !important;
+        }
+
+        .text-secondary {
+            color: var(--bs-secondary-color) !important;
+        }
+
+        /* Cinza */
+        .text-warning {
+            color: var(--bs-warning-text-emphasis) !important;
+        }
+
+        .text-danger {
+            color: var(--bs-danger-text-emphasis) !important;
+        }
+
+        /* Ajustes na tabela */
+        .table>:not(caption)>*>* {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            vertical-align: middle;
+        }
+
+        .table .feather {
+            width: 1.1rem;
+            height: 1.1rem;
+        }
+
+        .avatar-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .table .btn-link {
+            padding: 0.25rem;
+        }
+
+        .text-secondary {
+            /* Corrige conflito - botões da tabela */
+            color: var(--bs-secondary-color) !important;
+        }
+
+        .btn-link.text-secondary:hover {
+            color: #505a6a !important;
+        }
+
+        /* CSS do Modal */
+        .modal-body {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--bs-primary);
+            box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.1);
+        }
+
+        .feather-sm {
+            width: 1rem;
+            height: 1rem;
+        }
+
+
+        /* Responsividade (imitando o CSS original) */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 72px;
+                /* Largura colapsada */
+            }
+
+            .sidebar .logo-text,
+            .sidebar .nav-group-title,
+            .sidebar .nav-link span,
+            .sidebar .user-info,
+            .sidebar .user-settings .feather {
+                display: none;
+            }
+
+            .sidebar .logo {
+                justify-content: center;
+                padding-bottom: 1.5rem;
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .sidebar .nav-link {
+                justify-content: center;
+            }
+
+            .sidebar .user-profile {
+                justify-content: center;
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .header .search-bar-wrapper {
+                display: none;
+                /* Esconde barra de pesquisa em mobile */
+            }
+        }
+    </style>
+</head>
+
+<body class="app-layout">
+    <aside class="sidebar d-flex flex-column vh-100">
+        <div class="d-flex flex-column flex-grow-1 p-3">
+            <div class="logo d-flex align-items-center gap-2 pb-3 mb-3 border-bottom">
+                <div class="logo-icon d-flex align-items-center justify-content-center text-white">
+                    <i data-feather="activity" style="width: 18px; height: 18px;"></i>
+                </div>
+                <span class="logo-text fs-5 fw-bold text-dark">ClinicaPi</span>
+            </div>
+
+            <nav class="nav nav-pills flex-column flex-grow-1">
+                <div class="nav-group mb-3">
+                    <div class="nav-group-title">Geral</div>
+                    <a class="nav-link d-flex align-items-center gap-2" href="dashboard.html">
+                        <i data-feather="home" class="nav-icon"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2" href="agenda.html">
+                        <i data-feather="calendar" class="nav-icon"></i>
+                        <span>Agenda</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2" href="pacientes.html">
+                        <i data-feather="users" class="nav-icon"></i>
+                        <span>Pacientes</span>
+                    </a>
+                </div>
+                <div class="nav-group mb-3">
+                    <div class="nav-group-title">Administrativo</div>
+                    <a class="nav-link d-flex align-items-center gap-2" href="prontuarios.html">
+                        <i data-feather="clipboard" class="nav-icon"></i>
+                        <span>Prontuários</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2 active" href="funcionarios.html"> <i
+                            data-feather="briefcase" class="nav-icon"></i>
+                        <span>Funcionários</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2" href="convenios.html">
+                        <i data-feather="credit-card" class="nav-icon"></i>
+                        <span>Convênios</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2" href="configuracoes.html">
+                        <i data-feather="settings" class="nav-icon"></i>
+                        <span>Configurações</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+
+        <div class="user-profile p-3 border-top dropup">
+            <a href="#" class="d-flex align-items-center gap-2 text-decoration-none" data-bs-toggle="dropdown"
+                aria-expanded="false" style="cursor:pointer;">
+                <div class="user-avatar rounded-circle bg-primary-subtle d-flex align-items-center justify-content-center text-primary"
+                    style="width: 36px; height: 36px;">
+                    <i data-feather="user"></i>
+                </div>
+                <div class="user-info flex-grow-1 lh-sm">
+                    <div class="user-name fw-medium small text-dark">Dr. Silva</div>
+                    <div class="user-role small text-muted">Médico</div>
+                </div>
+                <div class="user-settings">
+                    <i data-feather="chevron-down"></i>
+                </div>
+            </a>
+            <ul class="dropdown-menu shadow-sm"
+                style="font-size: 0.875rem; width: calc(100% - 1.5rem); margin-left: 0.75rem;">
+                <li><a class="dropdown-item d-flex align-items-center gap-2" href="meu-perfil.html"><i data-feather="user"
+                            class="feather-sm"></i> Meu Perfil</a></li>
+                <li><a class="dropdown-item d-flex align-items-center gap-2" href="configuracoes.html"><i
+                            data-feather="settings" class="feather-sm"></i> Configurações</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item d-flex align-items-center gap-2 text-danger" href="login.html"><i
+                            data-feather="log-out" class="feather-sm"></i> Sair</a></li>
+            </ul>
+        </div>
+    </aside>
+
+    <div class="main-content-wrapper">
+
+        <header class="header d-flex align-items-center px-4">
+            <div class="search-bar-wrapper flex-grow-1 mx-md-4" style="max-width: 500px;">
+                <div class="input-group input-group-sm position-relative">
+                    <span class="search-icon"><i data-feather="search"></i></span>
+                    <input type="text" class="form-control search-input" placeholder="Pesquisar...">
+                </div>
+            </div>
+
+            <div class="header-actions ms-auto d-flex align-items-center gap-2">
+                <button class="action-button">
+                    <i data-feather="bell"></i>
+                    <span class="notification-badge badge rounded-pill">3</span>
+                </button>
+                <button class="action-button">
+                    <i data-feather="message-square"></i>
+                    <span class="notification-badge badge rounded-pill">1</span>
+                </button>
+
+                <div class="user-menu dropdown">
+                    <a href="#" class="d-flex align-items-center gap-2 text-decoration-none" data-bs-toggle="dropdown"
+                        aria-expanded="false" style="cursor: pointer;">
+                        <div class="user-avatar rounded-circle bg-primary-subtle d-flex align-items-center justify-content-center text-primary"
+                            style="width: 36px; height: 36px;">
+                            <i data-feather="user"></i>
+                        </div>
+                        <i data-feather="chevron-down" class="text-secondary"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="font-size: 0.875rem;">
+                        <li><a class="dropdown-item d-flex align-items-center gap-2" href="meu-perfil.html"><i data-feather="user"
+                                    class="feather-sm"></i> Meu Perfil</a></li>
+                        <li><a class="dropdown-item d-flex align-items-center gap-2" href="configuracoes.html"><i
+                                    data-feather="settings" class="feather-sm"></i> Configurações</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item d-flex align-items-center gap-2 text-danger" href="login.html"><i
+                                    data-feather="log-out" class="feather-sm"></i> Sair</a></li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+
+        <main class="p-4">
+            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between mb-4">
+                <div>
+                    <h1 class="h3 fw-bold text-dark mb-1">Gestão de Funcionários</h1>
+                    <p class="text-secondary mb-0">Adicione, edite e gerencie os usuários do sistema</p>
+                </div>
+                <div class="mt-3 mt-md-0">
+                    <button class="btn btn-primary d-inline-flex align-items-center gap-1" data-bs-toggle="modal"
+                        data-bs-target="#funcionarioModal" onclick="prepareCreateModal()">
+                        <i data-feather="plus" class="feather-sm"></i> Adicionar Funcionário
+                    </button>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 rounded-4 mb-4">
+                <div
+                    class="card-body p-3 d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+                    <div class="input-group input-group-sm w-100" style="max-width: 320px;">
+                        <span class="input-group-text bg-light border-end-0">
+                            <i data-feather="search" class="text-secondary feather-sm"></i>
+                        </span>
+                        <input type="search" id="filtro-nome"
+                            class="form-control form-control-sm bg-light border-start-0"
+                            placeholder="Buscar por nome...">
+                    </div>
+                    <div class="d-flex align-items-center gap-2 w-100 w-md-auto">
+                        <label for="filtro-cargo" class="form-label small mb-0 me-1 text-nowrap">Filtrar por:</label>
+                        <select id="filtro-cargo" class="form-select form-select-sm" style="width: auto;">
+                            <option value="todos" selected>Todos os Cargos</option>
+                            <option value="Administrador">Administrador</option>
+                            <option value="Médico">Médico</option>
+                            <option value="Atendente">Atendente</option>
+                        </select>
+                        <span class="badge bg-light text-dark border ms-2" id="contador-funcionarios">Total: 4</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" id="tabela-funcionarios">
+                        <thead class="table-light">
+                            <tr class="text-start text-secondary small">
+                                <th class="px-4 py-3 fw-medium">Funcionário</th>
+                                <th class="px-4 py-3 fw-medium">Cargo</th>
+                                <th class="px-4 py-3 fw-medium">E-mail</th>
+                                <th class="px-4 py-3 fw-medium">Status</th>
+                                <th class="px-4 py-3 fw-medium text-end">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-funcionarios">
+                            <tr data-cargo="Administrador">
+                                <td class="px-4 py-3">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img class="rounded-circle"
+                                            src="https://ui-avatars.com/api/?name=Dr+Silva&background=random&size=36"
+                                            alt="Avatar">
+                                        <div>
+                                            <p class="fw-medium text-dark mb-0 small">Dr. Silva</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-secondary small">Administrador</td>
+                                <td class="px-4 py-3 text-secondary small">dr.silva@email.com</td>
+                                <td class="px-4 py-3">
+                                    <span
+                                        class="badge rounded-pill fw-medium text-primary bg-primary-subtle border border-primary-subtle">Ativo</span>
+                                </td>
+                                <td class="px-4 py-3 text-end">
+                                    <div class="d-flex gap-1 justify-content-end">
+                                        <button class="btn btn-sm btn-link text-primary p-1" title="Editar"
+                                            data-bs-toggle="modal" data-bs-target="#funcionarioModal"
+                                            onclick="prepareEditModal(this, 'Dr. Silva', 'dr.silva@email.com', 'Administrador')">
+                                            <i data-feather="edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-link text-danger p-1" title="Excluir"
+                                            data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                            <i data-feather="trash-2"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr data-cargo="Médico">
+                                <td class="px-4 py-3">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img class="rounded-circle"
+                                            src="https://ui-avatars.com/api/?name=Carlos+Ferreira&background=random&size=36"
+                                            alt="Avatar">
+                                        <div>
+                                            <p class="fw-medium text-dark mb-0 small">Carlos Ferreira</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-secondary small">Médico</td>
+                                <td class="px-4 py-3 text-secondary small">carlos.f@email.com</td>
+                                <td class="px-4 py-3">
+                                    <span
+                                        class="badge rounded-pill fw-medium text-primary bg-primary-subtle border border-primary-subtle">Ativo</span>
+                                </td>
+                                <td class="px-4 py-3 text-end">
+                                    <div class="d-flex gap-1 justify-content-end">
+                                        <button class="btn btn-sm btn-link text-primary p-1" title="Editar"
+                                            data-bs-toggle="modal" data-bs-target="#funcionarioModal"
+                                            onclick="prepareEditModal(this, 'Carlos Ferreira', 'carlos.f@email.com', 'Médico', '12345-MG', 'Ortopedista')">
+                                            <i data-feather="edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-link text-danger p-1" title="Excluir"
+                                            data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                            <i data-feather="trash-2"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr data-cargo="Atendente">
+                                <td class="px-4 py-3">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img class="rounded-circle"
+                                            src="https://ui-avatars.com/api/?name=Ana+Souza&background=random&size=36"
+                                            alt="Avatar">
+                                        <div>
+                                            <p class="fw-medium text-dark mb-0 small">Ana Souza</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-secondary small">Atendente</td>
+                                <td class="px-4 py-3 text-secondary small">ana.souza@email.com</td>
+                                <td class="px-4 py-3">
+                                    <span
+                                        class="badge rounded-pill fw-medium text-primary bg-primary-subtle border border-primary-subtle">Ativo</span>
+                                </td>
+                                <td class="px-4 py-3 text-end">
+                                    <div class="d-flex gap-1 justify-content-end">
+                                        <button class="btn btn-sm btn-link text-primary p-1" title="Editar"
+                                            data-bs-toggle="modal" data-bs-target="#funcionarioModal"
+                                            onclick="prepareEditModal(this, 'Ana Souza', 'ana.souza@email.com', 'Atendente')">
+                                            <i data-feather="edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-link text-danger p-1" title="Excluir"
+                                            data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                            <i data-feather="trash-2"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr data-cargo="Médico">
+                                <td class="px-4 py-3">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img class="rounded-circle"
+                                            src="https://ui-avatars.com/api/?name=Maria+Oliveira&background=random&size=36"
+                                            alt="Avatar">
+                                        <div>
+                                            <p class="fw-medium text-dark mb-0 small">Dra. Maria Oliveira</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-secondary small">Médico</td>
+                                <td class="px-4 py-3 text-secondary small">maria.o@email.com</td>
+                                <td class="px-4 py-3">
+                                    <span
+                                        class="badge rounded-pill fw-medium text-primary bg-primary-subtle border border-primary-subtle">Ativo</span>
+                                </td>
+                                <td class="px-4 py-3 text-end">
+                                    <div class="d-flex gap-1 justify-content-end">
+                                        <button class="btn btn-sm btn-link text-primary p-1" title="Editar"
+                                            data-bs-toggle="modal" data-bs-target="#funcionarioModal"
+                                            onclick="prepareEditModal(this, 'Dra. Maria Oliveira', 'maria.o@email.com', 'Médico', '56789-SP', 'Cardiologista')">
+                                            <i data-feather="edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-link text-danger p-1" title="Excluir"
+                                            data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                            <i data-feather="trash-2"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div
+                    class="card-footer bg-white p-3 d-flex align-items-center justify-content-between small border-top">
+                    <p class="text-secondary mb-0" id="pagination-info">Mostrando 1-4 de 4 funcionários</p>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-secondary disabled">Anterior</button>
+                        <button class="btn btn-outline-secondary">Próximo</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal fade" id="funcionarioModal" tabindex="-1" aria-labelledby="funcionarioModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-header border-bottom p-4">
+                    <h1 class="modal-title fs-5 fw-bold text-dark" id="funcionarioModalLabel">Novo Funcionário</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="funcionarioForm">
+                        <input type="hidden" id="editRowIndex">
+
+                        <h5 class="h6 fw-medium text-dark mb-3">Dados de Acesso</h5>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="usuario" class="form-label small">Usuário (para login)</label>
+                                <input type="text" class="form-control form-control-sm" id="usuario" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="senha" class="form-label small">Senha</label>
+                                <input type="password" class="form-control form-control-sm" id="senha" required>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+                        <h5 class="h6 fw-medium text-dark mb-3">Dados Pessoais e Cargo</h5>
+                        <div class="row g-3 mb-3">
+                            <div class="col-12">
+                                <label for="nome" class="form-label small">Nome Completo</label>
+                                <input type="text" class="form-control form-control-sm" id="nome" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="data_nascimento" class="form-label small">Data de Nascimento</label>
+                                <input type="date" class="form-control form-control-sm" id="data_nascimento">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="idade" class="form-label small">Idade</label>
+                                <input type="number" class="form-control form-control-sm" id="idade">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="sexo" class="form-label small">Sexo</label>
+                                <select id="sexo" class="form-select form-select-sm">
+                                    <option value="" selected>Selecione...</option>
+                                    <option value="Masculino">Masculino</option>
+                                    <option value="Feminino">Feminino</option>
+                                    <option value="Outro">Outro</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cpf" class="form-label small">CPF</label>
+                                <input type="text" class="form-control form-control-sm" id="cpf"
+                                    placeholder="000.000.000-00">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cargo" class="form-label small">Perfil (Cargo)</label>
+                                <select id="cargo" class="form-select form-select-sm" required>
+                                    <option value="" disabled selected>Selecione um perfil...</option>
+                                    <option value="Administrador">Administrador</option>
+                                    <option value="Médico">Médico</option>
+                                    <option value="Atendente">Atendente</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3 d-none" id="campos-medico">
+                            <div class="col-md-6">
+                                <label for="crm" class="form-label small">CRM</label>
+                                <input type="text" class="form-control form-control-sm" id="crm"
+                                    placeholder="Ex: 12345-MG">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="especialidade" class="form-label small">Especialidade</label>
+                                <select id="especialidade" class="form-select form-select-sm">
+                                    <option value="" selected>Selecione...</option>
+                                    <option value="Clínico Geral">Clínico Geral</option>
+                                    <option value="Cardiologista">Cardiologista</option>
+                                    <option value="Ortopedista">Ortopedista</option>
+                                    <option value="Pediatra">Pediatra</option>
+                                </select>
+                            </div>
+                        </div>
+                        <hr class="my-4">
+                        <h5 class="h6 fw-medium text-dark mb-3">Contato e Endereço</h5>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="contato" class="form-label small">Contato (Telefone/Celular)</label>
+                                <input type="tel" class="form-control form-control-sm" id="contato"
+                                    placeholder="(00) 00000-0000">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label small">E-mail</label>
+                                <input type="email" class="form-control form-control-sm" id="email"
+                                    placeholder="usuario@email.com">
+                            </div>
+                            <div class="col-md-8">
+                                <label for="rua" class="form-label small">Rua</label>
+                                <input type="text" class="form-control form-control-sm" id="rua">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="complemento" class="form-label small">Complemento</label>
+                                <input type="text" class="form-control form-control-sm" id="complemento">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="bairro" class="form-label small">Bairro</label>
+                                <input type="text" class="form-control form-control-sm" id="bairro">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="cidade" class="form-label small">Cidade</label>
+                                <input type="text" class="form-control form-control-sm" id="cidade">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="estado" class="form-label small">Estado</label>
+                                <input type="text" class="form-control form-control-sm" id="estado"
+                                    placeholder="Ex: MG">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer bg-light border-top p-3 d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                        data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" form="funcionarioForm" class="btn btn-sm btn-primary">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-body p-4">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle bg-danger-subtle text-danger"
+                            style="width: 48px; height: 48px;">
+                            <i data-feather="alert-triangle"></i>
+                        </div>
+                        <div>
+                            <h1 class="modal-title fs-5 fw-bold text-dark" id="deleteModalLabel">Excluir Funcionário
+                            </h1>
+                            <p class="small text-secondary mt-1 mb-0">Tem certeza? Esta ação não pode ser desfeita.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-top px-3 py-2 d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                        data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-sm btn-danger">Sim, excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <script>
+        // Inicializa Feather Icons
+        feather.replace();
+        // Adiciona classe 'feather-sm' para ícones menores
+        document.querySelectorAll('button .feather, a .feather').forEach(icon => {
+            if (icon.closest('.btn-sm, .p-1, .px-2.py-1, .dropdown-item')) { // Adicionado .dropdown-item
+                icon.style.width = '1rem'; icon.style.height = '1rem';
+            }
+        });
+
+        // --- Lógica do Modal ---
+        const funcionarioModalElement = document.getElementById('funcionarioModal');
+        const funcionarioModal = new bootstrap.Modal(funcionarioModalElement);
+        const modalTitle = document.getElementById('funcionarioModalLabel');
+        const funcionarioForm = document.getElementById('funcionarioForm');
+        const editRowIndexInput = document.getElementById('editRowIndex');
+        const tabelaFuncionarios = document.getElementById('lista-funcionarios');
+
+        // ### CAMPOS DO MODAL DE FUNCIONÁRIO ###
+        const cargoSelect = document.getElementById('cargo');
+        const camposMedicoDiv = document.getElementById('campos-medico');
+        const crmInput = document.getElementById('crm');
+        const especialidadeSelect = document.getElementById('especialidade');
+
+
+        // ### FUNÇÃO PARA MOSTRAR/ESCONDER CAMPOS DE MÉDICO ###
+        function toggleCamposMedico(show) {
+            if (show) {
+                camposMedicoDiv.classList.remove('d-none');
+                crmInput.required = true;
+                especialidadeSelect.required = true;
+            } else {
+                camposMedicoDiv.classList.add('d-none');
+                crmInput.required = false;
+                crmInput.value = ''; // Limpa o valor
+                especialidadeSelect.required = false;
+                especialidadeSelect.value = ''; // Limpa o valor
+            }
+        }
+
+        // Adiciona o listener ao dropdown de Cargo
+        cargoSelect.addEventListener('change', () => {
+            toggleCamposMedico(cargoSelect.value === 'Médico');
+        });
+
+        // Prepara modal para CRIAÇÃO
+        function prepareCreateModal() {
+            modalTitle.textContent = 'Novo Funcionário';
+            funcionarioForm.reset();
+            editRowIndexInput.value = '';
+            toggleCamposMedico(false); // Garante que os campos de médico estão escondidos
+        }
+
+        // Prepara modal para EDIÇÃO
+        function prepareEditModal(buttonEl, nome, email, cargo, crm = '', especialidade = '') {
+            modalTitle.textContent = 'Editar Funcionário';
+            funcionarioForm.reset();
+
+            const row = buttonEl.closest('tr');
+            editRowIndexInput.value = Array.from(tabelaFuncionarios.children).indexOf(row);
+
+            // Preenche o formulário
+            document.getElementById('nome').value = nome || '';
+            document.getElementById('email').value = email || '';
+            document.getElementById('cargo').value = cargo || '';
+
+            // Mostra/esconde campos de médico baseado no cargo
+            toggleCamposMedico(cargo === 'Médico');
+
+            // Preenche os campos de médico se for um
+            if (cargo === 'Médico') {
+                crmInput.value = crm; // (passado como '12345-MG' no exemplo)
+                especialidadeSelect.value = especialidade; // (passado como 'Ortopedista' no exemplo)
+            }
+        }
+
+        // Ação de Salvar (Adicionar ou Editar)
+        funcionarioForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            // Validação (o required=true/false cuida do CRM/Especialidade)
+
+            const nome = document.getElementById('nome').value;
+            const cargo = document.getElementById('cargo').value;
+            const email = document.getElementById('email').value;
+            const crm = document.getElementById('crm').value;
+            const especialidade = document.getElementById('especialidade').value;
+            const editIndex = editRowIndexInput.value;
+
+            // Dados extras para passar para o 'onclick' do botão editar
+            const crmData = (cargo === 'Médico') ? crm : '';
+            const espData = (cargo === 'Médico') ? especialidade : '';
+
+            const newRowHtml = `
+                <td class="px-4 py-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <img class="rounded-circle" src="https://ui-avatars.com/api/?name=${encodeURIComponent(nome)}&background=random&size=36" alt="Avatar">
+                        <div>
+                            <p class="fw-medium text-dark mb-0 small">${nome}</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-4 py-3 text-secondary small">${cargo}</td>
+                <td class="px-4 py-3 text-secondary small">${email}</td>
+                <td class="px-4 py-3">
+                    <span class="badge rounded-pill fw-medium text-primary bg-primary-subtle border border-primary-subtle">Ativo</span>
+                </td>
+                <td class="px-4 py-3 text-end">
+                    <div class="d-flex gap-1 justify-content-end">
+                        <button class="btn btn-sm btn-link text-primary p-1" title="Editar" data-bs-toggle="modal" data-bs-target="#funcionarioModal" 
+                                onclick="prepareEditModal(this, '${nome}', '${email}', '${cargo}', '${crmData}', '${espData}')">
+                            <i data-feather="edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-link text-danger p-1" title="Excluir" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                            <i data-feather="trash-2"></i>
+                        </button>
+                    </div>
+                </td>
+            `;
+
+            if (editIndex !== '') {
+                // Modo Edição
+                const rowToEdit = tabelaFuncionarios.children[parseInt(editIndex)];
+                rowToEdit.innerHTML = newRowHtml;
+                rowToEdit.dataset.cargo = cargo;
+            } else {
+                // Modo Adição
+                const newRow = tabelaFuncionarios.insertRow();
+                newRow.innerHTML = newRowHtml;
+                newRow.dataset.cargo = cargo;
+            }
+
+            feather.replace(); // Renderiza os novos ícones
+            funcionarioModal.hide(); // Fecha o modal
+            updateFilters(); // Atualiza os filtros e contagem
+        });
+
+        // --- Lógica de Filtro ---
+        const filtroCargo = document.getElementById('filtro-cargo');
+        const filtroNome = document.getElementById('filtro-nome');
+        const contador = document.getElementById('contador-funcionarios');
+        const infoPaginacao = document.getElementById('pagination-info');
+
+        function updateFilters() {
+            const cargoValor = filtroCargo.value;
+            const nomeValor = filtroNome.value.toLowerCase();
+            let count = 0;
+            const totalRows = tabelaFuncionarios.querySelectorAll('tr').length; // Pega o total de linhas
+
+            tabelaFuncionarios.querySelectorAll('tr').forEach(row => {
+                const cargoLinha = row.dataset.cargo;
+                const nomeLinha = row.cells[0].textContent.toLowerCase();
+
+                const matchCargo = (cargoValor === 'todos' || cargoLinha === cargoValor);
+                const matchNome = nomeLinha.includes(nomeValor);
+
+                if (matchCargo && matchNome) {
+                    row.style.display = ''; // Mostra a linha
+                    count++;
+                } else {
+                    row.style.display = 'none'; // Esconde a linha
+                }
+            });
+
+            // Atualiza contadores
+            contador.textContent = `Total: ${count}`;
+            infoPaginacao.textContent = `Mostrando ${count} de ${totalRows} funcionários`;
+        }
+
+        filtroCargo.addEventListener('change', updateFilters);
+        filtroNome.addEventListener('input', updateFilters); // Filtra ao digitar
+
+    </script>
+</body>
+
+</html>
